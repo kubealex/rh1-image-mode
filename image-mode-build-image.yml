@@ -1,0 +1,27 @@
+---
+- name: RH1 Demo | Build RHEL Image Mode container
+  hosts: build_host
+  tasks:
+    - name: RH1 Demo | Ensure packages are up to date
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+
+    - name: RH1 Demo | Ensure Podman is present
+      ansible.builtin.dnf:
+        name: container-tools
+        state: present
+
+    - name: RH1 Demo | Login to registry
+      containers.podman.podman_login:
+        registry: "{{ rhel_image_mode_registry_url }}"
+        username: "{{ rhel_image_mode_registry_username }}"
+        password: "{{ rhel_image_mode_registry_password }}"
+
+    - name: RH1 Demo | Build and push RHEL Image
+      containers.podman.podman_image:
+        name: rhel-image-mode-demo
+        path: ./files
+        push: true
+        push_args:
+          dest: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}"
