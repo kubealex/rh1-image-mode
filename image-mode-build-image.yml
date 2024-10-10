@@ -20,8 +20,7 @@
 
     - name: RH1 Demo | Build and push RHEL Image
       containers.podman.podman_image:
-        name: rhel-image-mode-demo
+        name: {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo"
         path: ./files
         push: true
-        push_args:
-          dest: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}"
+
