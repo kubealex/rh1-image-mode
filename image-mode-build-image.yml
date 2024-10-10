@@ -3,11 +3,13 @@
   hosts: build_host
   tasks:
     - name: RH1 Demo | Ensure packages are up to date
+      become: true
       ansible.builtin.dnf:
         name: "*"
         state: latest
 
     - name: RH1 Demo | Ensure Podman is present
+      become: true
       ansible.builtin.dnf:
         name: container-tools
         state: present
