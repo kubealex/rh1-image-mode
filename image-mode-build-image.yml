@@ -57,7 +57,7 @@
         pull: newer
         security_opt:
           - label=type:unconfined_t
-        state: present
+        state: started
         ports:
           - "8080:80"
         volumes:
