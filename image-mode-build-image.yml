@@ -42,7 +42,7 @@
         build_args:
           force_rm: true
           container_file: "{{ workdir }}/Containerfile.build"
-        path: ./files
+        path: "{{ workdir }}/"
         push: true
 
     - name: RH1 Demo | Generate output folder for resulting image
@@ -76,7 +76,7 @@
     - name: RH1 Demo | Generate and push container image for OCP Virt
       containers.podman.podman_image:
         name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:ocpvirt"
-        path: ./files
+        path: "{{ workdir }}/"
         build_args:
           force_rm: true
           container_file: "{{ workdir }}/Containerfile.ocpvirt"        
