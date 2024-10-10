@@ -42,7 +42,7 @@
         build_args:
           force_rm: true
           container_file: "Containerfile.build"
-        path: "{{ workdir }}/"
+        path: "{{ workdir }}"
         push: true
 
     - name: RH1 Demo | Generate output folder for resulting image
@@ -56,7 +56,6 @@
         image: registry.redhat.io/rhel9/bootc-image-builder:latest
         privileged: true
         remove: true
-      
         pull: newer
         security_opt:
           - label=type:unconfined_t
@@ -76,7 +75,7 @@
     - name: RH1 Demo | Generate and push container image for OCP Virt
       containers.podman.podman_image:
         name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:ocpvirt"
-        path: "{{ workdir }}/"
+        path: "{{ workdir }}"
         build:
           force_rm: true
           container_file: "Containerfile.ocpvirt"        
