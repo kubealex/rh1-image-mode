@@ -41,7 +41,7 @@
         name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:vm"
         build_args:
           force_rm: true
-          container_file: "Containerfile.build"
+          file: "Containerfile.build"
         path: "{{ workdir }}"
         push: true
 
@@ -78,5 +78,5 @@
         path: "{{ workdir }}"
         build:
           force_rm: true
-          container_file: "Containerfile.ocpvirt"        
+          file: "Containerfile.ocpvirt"        
         push: true
