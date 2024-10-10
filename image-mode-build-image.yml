@@ -4,7 +4,7 @@
   tasks:
     - name: RH1 Demo | Set working directory
       ansible.builtin.set_fact:
-        workdir: "{{ lookup('env','HOME') }}"
+        workdir: "{{ lookup('env','HOME') }}/rhel-image-mode"
 
     - name: RH1 Demo | Ensure packages are up to date
       become: true
@@ -26,8 +26,8 @@
     
     - name: RH1 Demo | Copy containerfile
       ansible.builtin.copy:
-        src: ./files/Containerfile
-        dest: "{{ lookup('env','HOME') }}/"
+        src: ./files/
+        dest: "{{ workdir }}/"
         mode: "0775"
 
     - name: RH1 Demo | Login to registry
@@ -38,7 +38,10 @@
 
     - name: RH1 Demo | Build and push RHEL Image
       containers.podman.podman_image:
-        name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo"
+        name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:vm"
+        build_args:
+          force_rm: true
+          container_file: "{{ workdir }}/Containerfile.build"
         path: ./files
         push: true
 
@@ -69,3 +72,12 @@
       ansible.builtin.wait_for:
         path: "{{ workdir }}/output/qcow2/disk.qcow2"
         state: present
+
+    - name: RH1 Demo | Generate and push container image for OCP Virt
+      containers.podman.podman_image:
+        name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:ocpvirt"
+        path: ./files
+        build_args:
+          force_rm: true
+          container_file: "{{ workdir }}/Containerfile.ocpvirt"        
+        push: true
