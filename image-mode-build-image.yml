@@ -41,7 +41,7 @@
         name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:vm"
         build_args:
           force_rm: true
-          container_file: "{{ workdir }}/Containerfile.build"
+          container_file: "Containerfile.build"
         path: "{{ workdir }}/"
         push: true
 
@@ -77,7 +77,7 @@
       containers.podman.podman_image:
         name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:ocpvirt"
         path: "{{ workdir }}/"
-        build_args:
+        build:
           force_rm: true
-          container_file: "{{ workdir }}/Containerfile.ocpvirt"        
+          container_file: "Containerfile.ocpvirt"        
         push: true
