@@ -174,8 +174,8 @@
           volumes:
             - dataVolume:
                 name: rhel-image-mode
-              name: rootdisk
-            - name: cloudinitdisk
+              name: "rootdisk"
+            - name: "cloudinitdisk"
               cloudInitNoCloud:
                 userData: |
                   #cloud-config
@@ -210,7 +210,6 @@
                     - hostnamectl set-hostname $(hostname -f)
                     - /bin/bash /tmp/send_webhook.sh
                     - systemctl restart NetworkManager
-              name: cloudinit
 
     - name: RH1 Demo | Cleanup local working directory
       ansible.builtin.file:
