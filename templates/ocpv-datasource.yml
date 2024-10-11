@@ -1,0 +1,27 @@
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataImportCron
+metadata:
+  annotations:
+    cdi.kubevirt.io/storage.bind.immediate.requested: 'true'
+    cdi.kubevirt.io/storage.import.storageClass: ocs-storagecluster-ceph-rbd-virtualization
+  name: rhel-image-mode-cron
+  namespace: openshift-virtualization-os-images
+  labels:
+    instancetype.kubevirt.io/default-instancetype: u1.small
+    instancetype.kubevirt.io/default-preference: rhel.9
+    kubevirt.io/dynamic-credentials-support: 'true'
+spec:
+  garbageCollect: Outdated
+  managedDataSource: rhel-image-mode
+  schedule: "*/2 * * * *"
+  template:
+    metadata: {}
+    spec:
+      source:
+        registry:
+          pullMethod: node
+          url: 'docker://quay.io/kubealex/rhel-image-mode-demo:ocpvirt'
+      storage:
+        resources:
+          requests:
+            storage: 30G

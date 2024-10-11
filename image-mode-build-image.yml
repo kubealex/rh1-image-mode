@@ -116,13 +116,22 @@
           ansible.builtin.set_fact:
             ocp_api_key: "{{ _openshift_auth_results.openshift_auth.api_key }}"
 
+    - name: RH1 Demo | Ensure OCP-V DataSource is present
+      redhat.openshift.k8s:
+        host: "{{ ocp_api }}"
+        username: "{{ ocp_username }}"
+        password: "{{ ocp_password }}"
+        validate_certs: false             
+        state: present
+        definition: "{{ lookup('template', 'ocpv-datasource.yml') | from_yaml }}"
+   
     - name: RH1 Demo | Create a VirtualMachine
       redhat.openshift_virtualization.kubevirt_vm:
         host: "{{ ocp_api }}"
         api_key: "{{ ocp_api_key }}"
         validate_certs: false
         state: present
-        name: testvm
+        name: rhel-image-mode-vm
         namespace: rh1-demo
         instancetype:
           name: u1.small
@@ -130,17 +139,12 @@
           name: rhel.9
         data_volume_templates:
           - metadata:
-              name: rhel-image-mode
+              name: rhel-9-image-mode-vm
             spec:
-              source:
-                registry:
-                  url: docker://{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:ocpvirt
-              storage:
-                accessModes:
-                  - ReadWriteOnce
-                resources:
-                  requests:
-                    storage: 30Gi          
+              sourceRef:
+                kind: DataSource
+                name: rhel-image-mode
+                namespace: openshift-virtualization-os-images
         spec:
           domain:
             devices:
