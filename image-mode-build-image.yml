@@ -122,7 +122,7 @@
         api_key: "{{ ocp_api_key }}"
         validate_certs: false             
         state: present
-        definition: "{{ lookup('template', 'ocpv-datasource.yml') | from_yaml }}"
+        definition: "{{ lookup('template', 'ocpv-dataimport.yml') | from_yaml }}"
    
     - name: RH1 Demo | Create a VirtualMachine
       redhat.openshift_virtualization.kubevirt_vm:
@@ -216,7 +216,3 @@
                     - /bin/bash /tmp/send_webhook.sh
                     - systemctl restart NetworkManager
 
-    # - name: RH1 Demo | Cleanup local working directory
-    #   ansible.builtin.file:
-    #     path: "{{ workdir }}"
-    #     state: absent
