@@ -1,7 +1,0 @@
-FROM registry.access.redhat.com/ubi9/ubi-minimal:latest AS builder
-ADD --chown=107:107 output/qcow2/data.qcow2 /disk/ 
-RUN chmod 0440 /disk/*
-
-FROM scratch
-COPY --from=builder /disk/* /disk/
-EOF
