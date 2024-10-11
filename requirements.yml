@@ -1,4 +1,5 @@
 ---
 collections:
   - containers.podman
+  - redhat.openshift
   - redhat.openshift_virtualization
