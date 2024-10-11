@@ -102,25 +102,24 @@
             COPY --from=builder /disk/* /disk/
         push: true
 
-    # - name: OCP | Login to OCP cluster
-    #   block:
-    #     - name: OCP | Login into OpenShift Container Platform cluster
-    #       redhat.openshift.openshift_auth:
-    #         host: "{{ ocp_api }}"
-    #         username: "{{ ocp_username }}"
-    #         password: "{{ ocp_password }}"
-    #         validate_certs: false
-    #       register: _openshift_auth_results
+    - name: OCP | Login to OCP cluster
+      block:
+        - name: OCP | Login into OpenShift Container Platform cluster
+          redhat.openshift.openshift_auth:
+            host: "{{ ocp_api }}"
+            username: "{{ ocp_username }}"
+            password: "{{ ocp_password }}"
+            validate_certs: false
+          register: _openshift_auth_results
 
-    #     - name: Retrieving OCP api_key
-    #       ansible.builtin.set_fact:
-    #         ocp_api_key: "{{ _openshift_auth_results.openshift_auth.api_key }}"
+        - name: Retrieving OCP api_key
+          ansible.builtin.set_fact:
+            ocp_api_key: "{{ _openshift_auth_results.openshift_auth.api_key }}"
 
     - name: RH1 Demo | Create a VirtualMachine
       redhat.openshift_virtualization.kubevirt_vm:
         host: "{{ ocp_api }}"
-        username: "{{ ocp_username }}"
-        password: "{{ ocp_password }}"
+        api_key: "{{ ocp_api_key }}"
         validate_certs: false
         state: present
         name: testvm
