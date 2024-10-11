@@ -119,8 +119,7 @@
     - name: RH1 Demo | Ensure OCP-V DataSource is present
       redhat.openshift.k8s:
         host: "{{ ocp_api }}"
-        username: "{{ ocp_username }}"
-        password: "{{ ocp_password }}"
+        api_key: "{{ ocp_api_key }}"
         validate_certs: false             
         state: present
         definition: "{{ lookup('template', 'ocpv-datasource.yml') | from_yaml }}"
