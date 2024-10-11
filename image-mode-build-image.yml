@@ -140,7 +140,7 @@
                   - ReadWriteOnce
                 resources:
                   requests:
-                    storage: 5Gi          
+                    storage: 30Gi          
         spec:
           domain:
             devices:
@@ -211,7 +211,7 @@
                     - /bin/bash /tmp/send_webhook.sh
                     - systemctl restart NetworkManager
 
-    - name: RH1 Demo | Cleanup local working directory
-      ansible.builtin.file:
-        path: "{{ workdir }}"
-        state: absent
+    # - name: RH1 Demo | Cleanup local working directory
+    #   ansible.builtin.file:
+    #     path: "{{ workdir }}"
+    #     state: absent
