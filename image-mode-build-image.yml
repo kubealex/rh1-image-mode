@@ -144,6 +144,8 @@
                 kind: DataSource
                 name: rhel-image-mode
                 namespace: openshift-virtualization-os-images
+              storage:
+                resources: {}                
         spec:
           domain:
             devices:
