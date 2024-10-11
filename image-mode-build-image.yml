@@ -84,8 +84,8 @@
         path: "{{ workdir }}/output/qcow2/disk.qcow2"
         state: file
         mode: "0755"
-        owner: "{{ ansible_remote_user }}"
-        group: "{{ ansible_remote_user }}"
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_id }}"
 
     - name: RH1 Demo | Generate and push container image for OCP Virt
       containers.podman.podman_image:
