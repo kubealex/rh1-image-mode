@@ -79,7 +79,7 @@
         timeout: 10000
 
 
-    - name: RH1 Demo | Wait for image to be generated. It can take a while.
+    - name: RH1 Demo | Fix permissions
       become: true
       ansible.builtin.file:
         path: "{{ workdir }}/output/qcow2/disk.qcow2"
@@ -96,7 +96,7 @@
           force_rm: true
           container_file: |-
             FROM registry.access.redhat.com/ubi9/ubi-minimal:latest AS builder
-            ADD --chown=107:107 {{ workdir }}/output/qcow2/disk.qcow2 /disk/ 
+            ADD --chown=107:107 output/qcow2/disk.qcow2 /disk/ 
             RUN chmod 0440 /disk/*
             FROM scratch
             COPY --from=builder /disk/* /disk/
