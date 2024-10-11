@@ -138,7 +138,7 @@
           name: rhel.9
         data_volume_templates:
           - metadata:
-              name: rhel-9-image-mode-vm
+              name: rhel-image-mode
             spec:
               sourceRef:
                 kind: DataSource
