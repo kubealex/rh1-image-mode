@@ -110,6 +110,10 @@
 
     - name: RH1 Demo | Create a VirtualMachine
       redhat.openshift_virtualization.kubevirt_vm:
+        host: "{{ ocp_api }}"
+        username: "{{ ocp_username }}"
+        password: "{{ ocp_password }}"
+        validate_certs: false
         state: present
         name: testvm
         namespace: rh1-demo
