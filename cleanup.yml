@@ -40,6 +40,7 @@
           kind: DataImportCron
           metadata:
             name: rhel-image-mode
+            namespace: openshift-virtualization-os-images
 
     - name: RH1 Demo | Ensure OCP-V DataSource is absent
       redhat.openshift.k8s:
@@ -52,6 +53,8 @@
           kind: DataSource
           metadata:
             name: rhel-image-mode
+            namespace: openshift-virtualization-os-images
+
 
     - name: RH1 Demo | Cleanup local working directory
       ansible.builtin.file:
