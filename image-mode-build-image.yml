@@ -80,6 +80,7 @@
 
 
     - name: RH1 Demo | Wait for image to be generated. It can take a while.
+      become: true
       ansible.builtin.file:
         path: "{{ workdir }}/output/qcow2/disk.qcow2"
         state: file
