@@ -107,3 +107,96 @@
       ansible.builtin.file:
         path: "{{ workdir }}"
         state: absent
+
+    - name: RH1 Demo | Create a VirtualMachine
+      redhat.openshift_virtualization.kubevirt_vm:
+        state: present
+        name: testvm
+        namespace: rh1-demo
+        instancetype:
+          name: u1.small
+        preference:
+          name: rhel.9
+        data_volume_templates:
+          - metadata:
+              name: rhel-image-mode
+            spec:
+              source:
+                registry:
+                  url: docker://{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:ocpvirt
+              storage:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 5Gi          
+        spec:
+          domain:
+            devices:
+              disks:
+                - name: "rootdisk"
+                  disk:
+                    bus: "virtio"
+                  bootOrder: 1
+                - disk:
+                    bus: "virtio"
+                  name: "cloudinitdisk"
+                  bootOrder: 2
+              interfaces:
+                - name: "bridged-network"
+                  model: "virtio"
+                  bridge: {}
+                - masquerade: {}
+                  model: "virtio"
+                  name: "default"     
+              firmware:
+                bootloader:
+                  efi: {}
+              machine:
+                type: "pc-q35-rhel9.2.0"                               
+          networks:
+            - name: "bridged-network"
+              multus:
+                networkName: "rh1-demo/br1"
+            - name: "default"
+              pod: {}
+          volumes:
+            - dataVolume:
+                name: rhel-image-mode
+              name: datavolume
+            - name: "cloudinitdisk"
+              cloudInitNoCloud:
+                userData: |
+                  #cloud-config
+                  preserve_hostname: true
+                  ssh_pwauth: true
+                  user: sysadmin
+                  password: redhat
+                  chpasswd:
+                    expire: false
+                  users:
+                    - name: sysadmin
+                      plain_text_passwd: redhat
+                      lock_passwd: false
+                      sudo: ALL=(ALL) NOPASSWD:ALL
+                  disk_setup:
+                    /dev/vdc:
+                      table_type: 'mbr'
+                      layout: [100]
+                      overwrite: True
+                  fs_setup:
+                    - filesystem: 'ext4'
+                      device: '/dev/vdc1'
+                  write_files:
+                    - path: /tmp/send_webhook.sh
+                      content: |
+                        #!/bin/bash
+                        curl -X POST -d '{"source": "ocpvirt", "instanceName": "'$(hostname -f)'" }' ${WEBHOOK_URL}
+                      permissions: '0755'
+                  mounts:
+                    - [ /dev/vdc1, /myfilesystem ]
+                  runcmd:
+                    - hostnamectl set-hostname $(hostname -f)
+                    - /bin/bash /tmp/send_webhook.sh
+                    - systemctl restart NetworkManager
+              name: cloudinit
