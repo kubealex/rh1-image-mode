@@ -56,7 +56,7 @@
 
     - name: RH1 Demo | Generate QCOW Image with bootc-image-builder
       become: true
-      when: not qcow_image.stat.exist
+      when: qcow_image.stat.exist is defined
       containers.podman.podman_container:
         name: bootc-image-builder
         image: registry.redhat.io/rhel9/bootc-image-builder:latest
