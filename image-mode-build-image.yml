@@ -4,7 +4,7 @@
   tasks:
     - name: RH1 Demo | Set working directory
       ansible.builtin.set_fact:
-        workdir: "{{ lookup('env','HOME') }}/rhel-image-mode"
+        workdir: "{{ lookup('env', 'HOME') }}/rhel-image-mode"
 
     - name: RH1 Demo | Ensure packages are up to date
       become: true
@@ -23,7 +23,7 @@
         path: "{{ workdir }}/output"
         state: directory
         mode: "0775"
-    
+
     - name: RH1 Demo | Copy containerfile
       ansible.builtin.copy:
         src: ./files/
@@ -49,8 +49,14 @@
       ansible.builtin.file:
         path: "{{ workdir }}/output"
 
+    - name: RH1 Demo | Get stats of the FS object
+      ansible.builtin.stat:
+        path: "{{ workdir }}/output/qcow2/disk.qcow2"
+      register: qcow_image
+
     - name: RH1 Demo | Generate QCOW Image with bootc-image-builder
       become: true
+      when: not qcow_image.stat.exist
       containers.podman.podman_container:
         name: bootc-image-builder
         image: registry.redhat.io/rhel9/bootc-image-builder:latest
@@ -71,6 +77,7 @@
       ansible.builtin.wait_for:
         path: "{{ workdir }}/output/qcow2/disk.qcow2"
         state: present
+        timeout: 10000
 
     - name: RH1 Demo | Generate and push container image for OCP Virt
       containers.podman.podman_image:
@@ -78,5 +85,10 @@
         path: "{{ workdir }}"
         build:
           force_rm: true
-          file: "Containerfile.ocpvirt"        
+          file: "Containerfile.ocpvirt"
         push: true
+
+    - name: RH1 Demo | Cleanup local working directory
+      ansible.builtin.file:
+        path: "{{ workdir }}/output"
+        state: absent
