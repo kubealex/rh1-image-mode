@@ -103,11 +103,6 @@
             COPY --from=builder /disk/* /disk/
         push: true
 
-    - name: RH1 Demo | Cleanup local working directory
-      ansible.builtin.file:
-        path: "{{ workdir }}"
-        state: absent
-
     - name: RH1 Demo | Create a VirtualMachine
       redhat.openshift_virtualization.kubevirt_vm:
         host: "{{ ocp_api }}"
@@ -204,3 +199,8 @@
                     - /bin/bash /tmp/send_webhook.sh
                     - systemctl restart NetworkManager
               name: cloudinit
+
+    - name: RH1 Demo | Cleanup local working directory
+      ansible.builtin.file:
+        path: "{{ workdir }}"
+        state: absent
