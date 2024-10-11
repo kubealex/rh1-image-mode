@@ -82,8 +82,9 @@
     - name: RH1 Demo | Fix permissions
       become: true
       ansible.builtin.file:
-        path: "{{ workdir }}/output/qcow2/disk.qcow2"
-        state: file
+        path: "{{ workdir }}"
+        state: directory
+        recurse: true
         mode: "0755"
         owner: "{{ ansible_user_id }}"
         group: "{{ ansible_user_id }}"
@@ -104,5 +105,5 @@
 
     - name: RH1 Demo | Cleanup local working directory
       ansible.builtin.file:
-        path: "{{ workdir }}/output"
+        path: "{{ workdir }}"
         state: absent
