@@ -175,8 +175,8 @@
           volumes:
             - dataVolume:
                 name: rhel-image-mode
-              name: datavolume
-            - name: "cloudinitdisk"
+              name: rootdisk
+            - name: cloudinitdisk
               cloudInitNoCloud:
                 userData: |
                   #cloud-config
