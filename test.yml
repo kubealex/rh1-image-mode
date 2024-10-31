@@ -37,7 +37,7 @@
 
     - name: Debug testing
       ansible.builtin.debug:
-        msg: |-
+        msg:
           "{{ testing.stdout_lines }}"
 
     # - name: Debug
