@@ -37,8 +37,8 @@
 
     - name: Debug testing
       ansible.builtin.debug:
-        msg: "{{ testing.stdout_lines }}"
-
+        msg: "{{ item }}"
+      loop: "{{ testing.stdout_lines }}"
     # - name: Debug
     #   ansible.builtin.debug:
     #     msg: "{{ image_scan.content | b64decode }}"
