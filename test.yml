@@ -58,4 +58,4 @@
 
     - name: Debug
       ansible.builtin.debug:
-        var: image_scan
+        var: image_scan | b64decode
