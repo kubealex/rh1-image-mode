@@ -1,0 +1,12 @@
+---
+- name: RH1 Demo | Build RHEL Image Mode container
+  hosts: build_host
+  tasks:
+    - name: RH1 Demo | Clone app repo
+      ansible.builtin.git:
+        repo: https://github.com/kubealex/rh1-image-mode.git
+        dest: ./
+      register: test
+
+    - name: Debug
+      var: test

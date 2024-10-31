@@ -28,18 +28,9 @@
     - name: RH1 Demo | Run Image Vulnerability Scan
       ansible.builtin.shell:
         cmd: "trivy image --db-repository public.ecr.aws/aquasecurity/trivy-db:2 --scanners vuln {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:vm"
-      register: testing
+      register: image_scan
 
-    # - name: RH1 Demo | Fetch report
-    #   ansible.builtin.slurp:
-    #     src: "report"
-    #   register: image_scan
-
-    - name: Debug testing
+    - name: RH1 Demo | Print scan results
       ansible.builtin.debug:
         msg:
-          "{{ testing.stdout_lines }}"
-
-    # - name: Debug
-    #   ansible.builtin.debug:
-    #     msg: "{{ image_scan.content | b64decode }}"
+          "{{ image_scan.stdout_lines }}"
