@@ -58,4 +58,4 @@
 
     - name: Debug
       ansible.builtin.debug:
-        var: image_scan.content | b64decode
+        msg: "{{ image_scan.content | b64decode }}"
