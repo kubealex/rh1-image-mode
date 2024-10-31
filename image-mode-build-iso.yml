@@ -1,0 +1,195 @@
+---
+- name: RH1 Demo | Build RHEL Image Mode container
+  hosts: build_host
+  tasks:
+    - name: RH1 Demo | Set working directory
+      ansible.builtin.set_fact:
+        workdir: "{{ lookup('env', 'HOME') }}/rhel-image-mode"
+
+    - name: RH1 Demo | Ensure packages are up to date
+      become: true
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+
+    - name: RH1 Demo | Ensure Podman is present
+      become: true
+      ansible.builtin.dnf:
+        name: container-tools
+        state: present
+
+    - name: RH1 Demo | Create local working directory
+      ansible.builtin.file:
+        path: "{{ workdir }}/output"
+        state: directory
+        mode: "0775"
+
+    - name: RH1 Demo | Copy containerfile
+      ansible.builtin.copy:
+        src: ./files/
+        dest: "{{ workdir }}/"
+        mode: "0775"
+
+    - name: RH1 Demo | Login to registry
+      containers.podman.podman_login:
+        registry: "{{ rhel_image_mode_registry_url }}"
+        username: "{{ rhel_image_mode_registry_username }}"
+        password: "{{ rhel_image_mode_registry_password }}"
+
+    - name: RH1 Demo | Build and push RHEL Image
+      containers.podman.podman_image:
+        name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:vm"
+        build_args:
+          force_rm: true
+        path: "{{ workdir }}"
+        push: true
+
+    - name: RH1 Demo | Generate output folder for resulting image
+      ansible.builtin.file:
+        path: "{{ workdir }}/output"
+
+    - name: RH1 Demo | Get stats of the FS object
+      ansible.builtin.stat:
+        path: "{{ workdir }}/output/qcow2/disk.qcow2"
+      register: qcow_image
+
+    - name: RH1 Demo | Generate QCOW Image with bootc-image-builder
+      become: true
+      when: not qcow_image.stat.exists
+      containers.podman.podman_container:
+        name: bootc-image-builder
+        image: registry.redhat.io/rhel9/bootc-image-builder:latest
+        privileged: true
+        remove: true
+        pull: newer
+        security_opt:
+          - label=type:unconfined_t
+        state: started
+        ports:
+          - "8080:80"
+        volumes:
+          - "/var/lib/containers/storage:/var/lib/containers/storage"
+          - "{{ workdir }}/output:/output"
+        command: "--type qcow2 {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo"
+
+    - name: RH1 Demo | Wait for image to be generated. It can take a while.
+      ansible.builtin.wait_for:
+        path: "{{ workdir }}/output/qcow2/disk.qcow2"
+        state: present
+        timeout: 10000
+
+    - name: RH1 Demo | Fix permissions
+      become: true
+      ansible.builtin.file:
+        path: "{{ workdir }}"
+        state: directory
+        recurse: true
+        mode: "0755"
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_id }}"
+
+    - name: RH1 Demo | Generate and push container image for OCP Virt
+      containers.podman.podman_image:
+        name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:ocpvirt"
+        path: "{{ workdir }}"
+        build:
+          force_rm: true
+          container_file: |-
+            FROM registry.access.redhat.com/ubi9/ubi-minimal:latest AS builder
+            ADD --chown=107:107 output/qcow2/disk.qcow2 /disk/
+            RUN chmod 0440 /disk/*
+            FROM scratch
+            COPY --from=builder /disk/* /disk/
+        push: true
+
+    - name: OCP | Login to OCP cluster
+      block:
+        - name: OCP | Login into OpenShift Container Platform cluster
+          redhat.openshift.openshift_auth:
+            host: "{{ ocp_api }}"
+            username: "{{ ocp_username }}"
+            password: "{{ ocp_password }}"
+            validate_certs: false
+          register: _openshift_auth_results
+
+        - name: Retrieving OCP api_key
+          ansible.builtin.set_fact:
+            ocp_api_key: "{{ _openshift_auth_results.openshift_auth.api_key }}"
+
+    - name: RH1 Demo | Ensure OCP-V DataSource is present
+      redhat.openshift.k8s:
+        host: "{{ ocp_api }}"
+        api_key: "{{ ocp_api_key }}"
+        validate_certs: false
+        state: present
+        definition: "{{ lookup('template', 'ocpv-dataimport.yml') | from_yaml }}"
+
+    - name: RH1 Demo | Create a VirtualMachine
+      redhat.openshift_virtualization.kubevirt_vm:
+        host: "{{ ocp_api }}"
+        api_key: "{{ ocp_api_key }}"
+        validate_certs: false
+        state: present
+        name: rhel-image-mode-vm
+        namespace: rh1-demo
+        instancetype:
+          name: u1.small
+        preference:
+          name: rhel.9
+        data_volume_templates:
+          - metadata:
+              name: rhel-image-mode
+            spec:
+              sourceRef:
+                kind: DataSource
+                name: rhel-image-mode
+                namespace: openshift-virtualization-os-images
+              storage:
+                resources: {}
+        spec:
+          domain:
+            devices:
+              disks:
+                - name: "rootdisk"
+                  disk:
+                    bus: "virtio"
+                  bootOrder: 1
+                - disk:
+                    bus: "virtio"
+                  name: "cloudinitdisk"
+                  bootOrder: 2
+              interfaces:
+                - masquerade: {}
+                  model: "virtio"
+                  name: "default"
+              firmware:
+                bootloader:
+                  efi: {}
+              machine:
+                type: "pc-q35-rhel9.2.0"
+          networks:
+            - name: "default"
+              pod: {}
+          volumes:
+            - dataVolume:
+                name: rhel-image-mode
+              name: "rootdisk"
+            - name: "cloudinitdisk"
+              cloudInitNoCloud:
+                userData: |
+                  #cloud-config
+                  preserve_hostname: true
+                  ssh_pwauth: true
+                  user: sysadmin
+                  password: redhat
+                  chpasswd:
+                    expire: false
+                  users:
+                    - name: sysadmin
+                      plain_text_passwd: redhat
+                      lock_passwd: false
+                      sudo: ALL=(ALL) NOPASSWD:ALL
+                  runcmd:
+                    - hostnamectl set-hostname $(hostname -f)
+                    - systemctl restart NetworkManager
+
