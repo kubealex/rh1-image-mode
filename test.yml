@@ -15,6 +15,7 @@
             baseurl: https://aquasecurity.github.io/trivy-repo/rpm/releases/$releasever/$basearch/
             gpgcheck: false
             enabled: true
+            description: Trivy Repo
 
         - name: RH1 Demo | Install trivy
           ansible.builtin.dnf:
