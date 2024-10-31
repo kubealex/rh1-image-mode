@@ -9,4 +9,5 @@
       register: test
 
     - name: Debug
-      var: test
+      ansible.builtin.debug:
+        var: test
