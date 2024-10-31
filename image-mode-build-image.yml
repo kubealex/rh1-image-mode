@@ -35,11 +35,3 @@
       ansible.builtin.debug:
         msg:
           "{{ image_scan.stdout_lines }}"
-
-    - name: RH1 Demo | Push RHEL Image
-      containers.podman.podman_image:
-        name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:vm"
-        build_args:
-          force_rm: true
-        path: "{{ workdir }}"
-        push: true
