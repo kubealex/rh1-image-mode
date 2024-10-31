@@ -6,6 +6,21 @@
       ansible.builtin.set_fact:
         workdir: "{{ lookup('env', 'HOME') }}/rhel-image-mode"
 
+    - name: RH1 Demo | Set-up trivy scanning
+      become: true
+      block:
+        - name: RH1 Demo | Add trivy repo
+          ansible.builtin.yum_repository:
+            name: Trivy repository
+            baseurl: https://aquasecurity.github.io/trivy-repo/rpm/releases/$releasever/$basearch/
+            gpgcheck: false
+            enabled: true
+
+        - name: RH1 Demo | Install trivy
+          ansible.builtin.dnf:
+            name: trivy
+            state: present
+
     - name: RH1 Demo | Create local working directory
       ansible.builtin.file:
         path: "{{ workdir }}/output"
@@ -32,13 +47,8 @@
         path: "{{ workdir }}"
 
     - name: RH1 Demo | Run Image Vulnerability Scan
-      containers.podman.podman_container:
-        name: trivy-scanner
-        image: docker.io/aquasec/trivy
-        remove: true
-        pull: newer
-        state: started
-        command: "image --db-repository public.ecr.aws/aquasecurity/trivy-db:2 --scanners vuln {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:vm"
+      ansible.builtin.shell:
+        command: "trivy image --db-repository public.ecr.aws/aquasecurity/trivy-db:2 --scanners vuln {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:vm"
       register: image_scan
 
     - name: Debug
