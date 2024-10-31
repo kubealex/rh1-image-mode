@@ -1,0 +1,5 @@
+---
+- name: EDA Demo | Configure AAP Controller
+  import_playbook: configure-aap-controller.yml
+- name: EDA Demo | Configure EDA Controller
+  import_playbook: configure-eda-controller.yml
