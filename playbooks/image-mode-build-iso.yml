@@ -52,7 +52,7 @@
         volumes:
           - "/var/lib/containers/storage:/var/lib/containers/storage"
           - "{{ workdir }}/output:/output"
-        command: "--type anaconda-iso {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:iso"
+        command: "--type anaconda-iso --tls-verify=false {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:iso"
 
     - name: RH1 Demo | Wait for image to be generated. It can take a while.
       ansible.builtin.wait_for:
