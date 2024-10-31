@@ -52,17 +52,15 @@
         cmd: "trivy image -o report --db-repository public.ecr.aws/aquasecurity/trivy-db:2 --scanners vuln {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:vm"
       register: testing
 
-    - name: RH1 Demo | Fetch report
-      ansible.builtin.slurp:
-        src: "report"
-      register: image_scan
+    # - name: RH1 Demo | Fetch report
+    #   ansible.builtin.slurp:
+    #     src: "report"
+    #   register: image_scan
 
     - name: Debug testing
       ansible.builtin.debug:
-        msg:
-          - "{{ item }}"
-      loop: testing.stdout_lines
+        msg: "{{ testing.stdout_lines }}"
 
-    - name: Debug
-      ansible.builtin.debug:
-        msg: "{{ image_scan.content | b64decode }}"
+    # - name: Debug
+    #   ansible.builtin.debug:
+    #     msg: "{{ image_scan.content | b64decode }}"
