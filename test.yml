@@ -61,7 +61,7 @@
       ansible.builtin.debug:
         msg:
           - "{{ item }}"
-      loop: "{{ testing.stdout_lines }}"
+      loop: testing.stdout_lines
 
     - name: Debug
       ansible.builtin.debug:
