@@ -27,7 +27,7 @@
 
     - name: RH1 Demo | Run Image Vulnerability Scan
       ansible.builtin.shell:
-        cmd: "trivy image -o report --db-repository public.ecr.aws/aquasecurity/trivy-db:2 --scanners vuln {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:vm"
+        cmd: "trivy image --db-repository public.ecr.aws/aquasecurity/trivy-db:2 --scanners vuln {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:vm"
       register: testing
 
     # - name: RH1 Demo | Fetch report
