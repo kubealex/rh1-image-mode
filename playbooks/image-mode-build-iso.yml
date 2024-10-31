@@ -21,16 +21,16 @@
 
     - name: RH1 Demo | Build and push RHEL Image
       containers.podman.podman_image:
-        name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:iso"
+        name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:app"
         build_args:
           force_rm: true
-          file: Containerfile.iso
         path: "{{ workdir }}/image-repo"
         push: true
 
     - name: RH1 Demo | Generate output folder for resulting image
       ansible.builtin.file:
         path: "{{ workdir }}/output"
+        state: directory
 
     - name: RH1 Demo | Get stats of the FS object
       ansible.builtin.stat:
@@ -52,7 +52,7 @@
         volumes:
           - "/var/lib/containers/storage:/var/lib/containers/storage"
           - "{{ workdir }}/output:/output"
-        command: "--type anaconda-iso --tls-verify=false {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:iso"
+        command: "--type anaconda-iso --tls-verify=false {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:app"
 
     - name: RH1 Demo | Wait for image to be generated. It can take a while.
       ansible.builtin.wait_for:
@@ -70,7 +70,7 @@
         owner: "{{ ansible_user_id }}"
         group: "{{ ansible_user_id }}"
 
-    - name: RH1 Demo | Cleanup local working directory
-      ansible.builtin.file:
-        path: "{{ workdir }}/image-repo"
-        state: absent
+    # - name: RH1 Demo | Cleanup local working directory
+    #   ansible.builtin.file:
+    #     path: "{{ workdir }}/image-repo"
+    #     state: absent

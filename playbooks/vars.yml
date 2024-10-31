@@ -3,3 +3,4 @@ rhel_image_mode_registry_username: gitea
 rhel_image_mode_registry_password: redhat
 
 image_mode_application_repo: https://github.com/kubealex/rh1-image-mode-container-app.git
+image_mode_soe_repo: https://github.com/kubealex/rh1-image-mode-soe.git

@@ -62,6 +62,13 @@ aap2_templates:
       - RH1 Image Mode Demo - Linux Credentials
     aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
     aap2_template_project: RH1 Image Mode Demo
+    # ------------------------------------
+  - aap2_template_name: "[RH1 Image Mode Demo] Build SOE Image"
+    aap2_template_playbook: playbooks/image-mode-build-soe-image.yml
+    aap2_template_credentials:
+      - RH1 Image Mode Demo - Linux Credentials
+    aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
+    aap2_template_project: RH1 Image Mode Demo
 
 aap2_workflows:
   - aap2_workflow_name: "[RH1 Image Mode Demo] Build Image Mode update"
