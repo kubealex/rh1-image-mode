@@ -2,10 +2,14 @@
 - name: RH1 Demo | Build RHEL Image Mode container
   hosts: build_host
   tasks:
+    - name: RH1 Demo | Set working directory
+      ansible.builtin.set_fact:
+        workdir: "{{ lookup('env', 'HOME') }}/rhel-image-mode"
+
     - name: RH1 Demo | Clone app repo
       ansible.builtin.git:
         repo: https://github.com/kubealex/rh1-image-mode.git
-        dest: ./
+        dest: "{{ workdir }}"
       register: test
 
     - name: Debug
