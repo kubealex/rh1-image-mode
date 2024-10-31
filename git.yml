@@ -15,3 +15,8 @@
     - name: Test
       ansible.builtin.shell:
         cmd: "pwd & ls -latr"
+      register: testing
+
+    - name: Debug
+      ansible.builtin.debug:
+        var: testing
