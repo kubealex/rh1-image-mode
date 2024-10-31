@@ -25,7 +25,7 @@
         build_args:
           force_rm: true
           file: Containerfile.iso
-        path: "{{ workdir }}/image-rep"
+        path: "{{ workdir }}/image-repo"
         push: true
 
     - name: RH1 Demo | Generate output folder for resulting image
@@ -69,3 +69,8 @@
         mode: "0755"
         owner: "{{ ansible_user_id }}"
         group: "{{ ansible_user_id }}"
+
+    - name: RH1 Demo | Cleanup local working directory
+      ansible.builtin.file:
+        path: "{{ workdir }}/image-repo"
+        state: absent

@@ -13,7 +13,7 @@
         name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:vm"
         build_args:
           force_rm: true
-        path: "{{ workdir }}"
+        path: "{{ workdir }}/image-repo"
         push: true
 
     - name: RH1 Demo | Cleanup local working directory

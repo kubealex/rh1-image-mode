@@ -11,7 +11,7 @@
     - name: RH1 Demo | Clone app repo
       ansible.builtin.git:
         repo: "{{ image_mode_application_repo }}"
-        dest: "{{ workdir }}"
+        dest: "{{ workdir }}/image-repo"
 
     - name: RH1 Demo | Login to registry
       containers.podman.podman_login:
@@ -24,7 +24,7 @@
         name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:vm"
         build_args:
           force_rm: true
-        path: "{{ workdir }}"
+        path: "{{ workdir }}/image-repo"
 
     - name: RH1 Demo | Run Image Vulnerability Scan
       ansible.builtin.shell:
