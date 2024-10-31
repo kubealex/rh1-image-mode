@@ -25,7 +25,7 @@
         build_args:
           force_rm: true
           file: Containerfile.iso
-        path: "{{ workdir }}"
+        path: "{{ workdir }}/image-rep"
         push: true
 
     - name: RH1 Demo | Generate output folder for resulting image
