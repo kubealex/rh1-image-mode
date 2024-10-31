@@ -6,28 +6,6 @@
       ansible.builtin.set_fact:
         workdir: "{{ lookup('env', 'HOME') }}/rhel-image-mode"
 
-    - name: RH1 Demo | Set-up trivy scanning
-      become: true
-      block:
-        - name: RH1 Demo | Add trivy repo
-          ansible.builtin.yum_repository:
-            name: Trivy repository
-            baseurl: https://aquasecurity.github.io/trivy-repo/rpm/releases/$releasever/$basearch/
-            gpgcheck: false
-            enabled: true
-            description: Trivy Repo
-
-        - name: RH1 Demo | Install trivy
-          ansible.builtin.dnf:
-            name: trivy
-            state: present
-
-    - name: RH1 Demo | Create local working directory
-      ansible.builtin.file:
-        path: "{{ workdir }}/output"
-        state: directory
-        mode: "0775"
-
     - name: RH1 Demo | Copy containerfile
       ansible.builtin.copy:
         src: ./files/
