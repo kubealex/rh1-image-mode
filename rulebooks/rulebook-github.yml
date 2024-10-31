@@ -8,7 +8,7 @@
         port: 5010
   rules:
     - name: RH1 Demo | Webhook | Debug
-      condition: event.meta.headers.X-Github-Event == 'create'
+      condition: event.meta.headers["X-Github-Event"] == 'create'
       actions:
         - debug:
         # - run_job_template:
