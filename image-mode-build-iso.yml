@@ -4,7 +4,7 @@
   tasks:
     - name: RH1 Demo | Set working directory
       ansible.builtin.set_fact:
-        workdir: "{{ lookup('env', 'HOME') }}/rhel-image-mode"
+        workdir: "/home/{{ ansible_user }}/rhel-image-mode"
 
     - name: RH1 Demo | Create local working directory
       ansible.builtin.file:
@@ -75,4 +75,3 @@
         mode: "0755"
         owner: "{{ ansible_user_id }}"
         group: "{{ ansible_user_id }}"
-

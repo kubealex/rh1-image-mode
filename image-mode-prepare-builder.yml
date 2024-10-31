@@ -4,7 +4,7 @@
   tasks:
     - name: RH1 Demo | Set working directory
       ansible.builtin.set_fact:
-        workdir: "{{ lookup('env', 'HOME') }}/rhel-image-mode"
+        workdir: "/home/{{ ansible_user }}/rhel-image-mode"
 
     - name: RH1 Demo | Ensure packages are up to date
       become: true

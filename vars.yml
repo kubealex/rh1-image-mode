@@ -1,3 +1,5 @@
 rhel_image_mode_registry_url:
 rhel_image_mode_registry_username:
 rhel_image_mode_registry_password:
+
+image_mode_application_repo:

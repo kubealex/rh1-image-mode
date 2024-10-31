@@ -1,0 +1,19 @@
+---
+- name: RH1 Demo | Webhook | Listen for events on a webhook
+  hosts: localhost
+
+  sources:
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5010
+  rules:
+    - name: RH1 Demo | Webhook | Debug
+      condition: event.payload is defined
+      actions:
+        - debug:
+        # - run_job_template:
+        #     name: "[EDA][Linux] Register RH VM"
+        #     organization: Default
+        #     job_args:
+        #       extra_vars:
+        #         target_hosts: "{{ event.payload.instanceName }}"

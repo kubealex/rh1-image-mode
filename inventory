@@ -1,2 +1,2 @@
 [build_host]
-localhost ansible_connection=local
+rhel-bootc.rh-lab.labs ansible_user=sysadmin ansible_password=redhat
