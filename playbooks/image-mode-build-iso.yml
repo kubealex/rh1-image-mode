@@ -40,10 +40,10 @@
 
     - name: RH1 Demo | Get stats of the FS object
       ansible.builtin.stat:
-        path: "{{ workdir }}/output/qcow2/disk.qcow2"
+        path: "{{ workdir }}/output/bootiso/install.iso"
       register: qcow_image
 
-    - name: RH1 Demo | Generate QCOW Image with bootc-image-builder
+    - name: RH1 Demo | Generate ISO Image with bootc-image-builder
       become: true
       when: not qcow_image.stat.exists
       containers.podman.podman_container:
@@ -55,16 +55,14 @@
         security_opt:
           - label=type:unconfined_t
         state: started
-        ports:
-          - "8080:80"
         volumes:
           - "/var/lib/containers/storage:/var/lib/containers/storage"
           - "{{ workdir }}/output:/output"
-        command: "--type qcow2 {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo"
+        command: "--type anaconda-iso {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo"
 
     - name: RH1 Demo | Wait for image to be generated. It can take a while.
       ansible.builtin.wait_for:
-        path: "{{ workdir }}/output/qcow2/disk.qcow2"
+        path: "{{ workdir }}/output/bootiso/install.iso"
         state: present
         timeout: 10000
 

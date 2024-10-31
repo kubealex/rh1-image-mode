@@ -50,20 +50,39 @@ aap2_templates:
     aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
     aap2_template_ask_vars: true
     aap2_template_project: RH1 Image Mode Demo
+    # ------------------------------------
+  - aap2_template_name: "[RH1 Image Mode Demo] Prepare builder server"
+    aap2_template_playbook: playbooks/image-mode-prepare-builder.yml
+    aap2_template_credentials:
+      - RH1 Image Mode Demo - Linux Credentials
+    aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
+    aap2_template_ask_vars: true
+    aap2_template_project: RH1 Image Mode Demo
+    # ------------------------------------
+  - aap2_template_name: "[RH1 Image Mode Demo] Build ISO Image"
+    aap2_template_playbook: playbooks/image-mode-prepare-builder.yml
+    aap2_template_credentials:
+      - RH1 Image Mode Demo - Linux Credentials
+    aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
+    aap2_template_ask_vars: true
+    aap2_template_project: RH1 Image Mode Demo
 
 aap2_workflows:
   - aap2_workflow_name: "[RH1 Image Mode Demo] Build Image Mode update"
     aap2_workflow_project: RH1 Image Mode Demo
     aap2_workflow_nodes:
       - node_name: image-mode-build-scan
+        approval: false
         nodes_on_success:
           - image-mode-approve-scan
         node_job_template: "[RH1 Image Mode Demo] Build and scan image"
       - node_name: image-mode-approve-scan
         approval: true
+        description: "Review the RHEL Image scan and proceed with push"
         nodes_on_success:
           - image-mode-push
       - node_name: image-mode-push
+        approval: false
         node_job_template: "[RH1 Image Mode Demo] Push updated image"
 
 ####### EDA CONTROLLER VARIABLES ########
