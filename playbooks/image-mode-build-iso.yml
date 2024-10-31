@@ -8,17 +8,10 @@
       ansible.builtin.set_fact:
         workdir: "/home/{{ ansible_user }}/rhel-image-mode"
 
-    - name: RH1 Demo | Create local working directory
-      ansible.builtin.file:
-        path: "{{ workdir }}/output"
-        state: directory
-        mode: "0775"
-
-    - name: RH1 Demo | Copy containerfile
-      ansible.builtin.copy:
-        src: ./files/
-        dest: "{{ workdir }}/"
-        mode: "0775"
+    - name: RH1 Demo | Clone app repo
+      ansible.builtin.git:
+        repo: "{{ image_mode_application_repo }}"
+        dest: "{{ workdir }}"
 
     - name: RH1 Demo | Login to registry
       containers.podman.podman_login:
@@ -31,6 +24,7 @@
         name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:vm"
         build_args:
           force_rm: true
+          file: Containerfile.iso
         path: "{{ workdir }}"
         push: true
 

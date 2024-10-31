@@ -40,7 +40,6 @@ aap2_templates:
     aap2_template_credentials:
       - RH1 Image Mode Demo - Linux Credentials
     aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
-    aap2_template_ask_vars: true
     aap2_template_project: RH1 Image Mode Demo
     # ------------------------------------
   - aap2_template_name: "[RH1 Image Mode Demo] Push updated image"
@@ -48,7 +47,6 @@ aap2_templates:
     aap2_template_credentials:
       - RH1 Image Mode Demo - Linux Credentials
     aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
-    aap2_template_ask_vars: true
     aap2_template_project: RH1 Image Mode Demo
     # ------------------------------------
   - aap2_template_name: "[RH1 Image Mode Demo] Prepare builder server"
@@ -56,15 +54,13 @@ aap2_templates:
     aap2_template_credentials:
       - RH1 Image Mode Demo - Linux Credentials
     aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
-    aap2_template_ask_vars: true
     aap2_template_project: RH1 Image Mode Demo
     # ------------------------------------
   - aap2_template_name: "[RH1 Image Mode Demo] Build ISO Image"
-    aap2_template_playbook: playbooks/image-mode-prepare-builder.yml
+    aap2_template_playbook: playbooks/image-mode-build-iso.yml
     aap2_template_credentials:
       - RH1 Image Mode Demo - Linux Credentials
     aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
-    aap2_template_ask_vars: true
     aap2_template_project: RH1 Image Mode Demo
 
 aap2_workflows:
