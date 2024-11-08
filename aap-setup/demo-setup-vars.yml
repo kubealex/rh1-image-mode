@@ -1,6 +1,28 @@
+main_repo_url: https://github.com/kubealex/rh1-image-mode.git
+
+rhel_image_mode_registry_url: service-vm.rh-lab.labs:3000
+rhel_image_mode_registry_username: gitea
+rhel_image_mode_registry_password: redhat
+
+image_mode_application_repo: https://github.com/kubealex/rh1-image-mode-container-app.git
+image_mode_soe_repo: https://github.com/kubealex/rh1-image-mode-soe
+
+aap2_controller_url: https://aap.rh-lab.labs:8443
+aap2_controller_username: admin
+aap2_controller_password: redhat
+
+eda_controller_url: https://aap.rh-lab.labs:8445
+eda_controller_username: admin
+eda_controller_password: redhat
+
+aap2_ee: service-vm.rh-lab.labs:3000/gitea/aap2-demo-ee # to be replaced based on your setup
+aap2_de: service-vm.rh-lab.labs:3000/gitea/eda-decision-env # to be replaced based on your setup
+
+
+
 aap2_projects:
   - name: "RH1 Image Mode Demo"
-    scm_url: "https://github.com/kubealex/rh1-image-mode"
+    scm_url: "{{ main_repo_url }}"
     scm_branch: "main"
     default_ee: "RH1 Image Mode Demo EE"
   # ------------------------------------
@@ -17,6 +39,39 @@ aap2_machine_credentials:
   - name: "RH1 Image Mode Demo - Linux Credentials"
     username: sysadmin
     password: redhat
+  # ------------------------------------
+  # ------------------------------------
+
+aap2_custom_credentials:
+  - credential_type: RH1 Image Mode Demo - Container Registry Auth
+    name: RH1 Image Mode Demo - Container Registry Credentials
+    credential_type_inputs:
+      fields:
+        - id: image_registry_url
+          type: string
+          label: "Image Registry URL"
+          secret: false
+        - id: image_registry_user
+          type: string
+          label: "Image Registry username"
+          secret: false
+        - id: image_registry_pwd
+          type: string
+          label: "Image Registry password"
+          secret: true
+      required:
+        - image_registry_url
+        - image_registry_user
+        - image_registry_pwd
+    credential_type_injectors:
+      extra_vars:
+        rhel_image_mode_registry_url: !unsafe "{{ image_registry_url }}"
+        rhel_image_mode_registry_username: !unsafe "{{ image_registry_user }}"
+        rhel_image_mode_registry_password: !unsafe "{{ image_registry_pwd }}"
+    credential_inputs:
+      image_registry_url: "{{ rhel_image_mode_registry_url }}"
+      image_registry_user: "{{ rhel_image_mode_registry_username }}"
+      image_registry_pwd: "{{ rhel_image_mode_registry_password }}"
   # ------------------------------------
   # ------------------------------------
 
@@ -39,6 +94,7 @@ aap2_templates:
     aap2_template_playbook: playbooks/image-mode-build-image.yml
     aap2_template_credentials:
       - RH1 Image Mode Demo - Linux Credentials
+      - RH1 Image Mode Demo - Container Registry Credentials
     aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
     aap2_template_project: RH1 Image Mode Demo
     # ------------------------------------
@@ -46,6 +102,7 @@ aap2_templates:
     aap2_template_playbook: playbooks/image-mode-push-image.yml
     aap2_template_credentials:
       - RH1 Image Mode Demo - Linux Credentials
+      - RH1 Image Mode Demo - Container Registry Credentials
     aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
     aap2_template_project: RH1 Image Mode Demo
     # ------------------------------------
@@ -60,6 +117,7 @@ aap2_templates:
     aap2_template_playbook: playbooks/image-mode-build-iso.yml
     aap2_template_credentials:
       - RH1 Image Mode Demo - Linux Credentials
+      - RH1 Image Mode Demo - Container Registry Credentials
     aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
     aap2_template_project: RH1 Image Mode Demo
     # ------------------------------------
@@ -70,6 +128,7 @@ aap2_workflows:
     aap2_workflow_extra_vars:
       image_tag: app
       build_folder: app-repo
+      repo_url: "{{ image_mode_application_repo }}"
     aap2_workflow_nodes:
       - node_name: image-mode-build-scan
         approval: false
@@ -90,6 +149,7 @@ aap2_workflows:
     aap2_workflow_extra_vars:
       image_tag: app
       build_folder: app-repo
+      repo_url: "{{ image_mode_application_repo }}"
     aap2_workflow_nodes:
       - node_name: image-mode-build-scan
         approval: false
@@ -110,6 +170,7 @@ aap2_workflows:
     aap2_workflow_extra_vars:
       image_tag: soe
       build_folder: soe-repo
+      repo_url: "{{ image_mode_soe_repo }}"
     aap2_workflow_nodes:
       - node_name: image-mode-build-scan
         approval: false
@@ -130,6 +191,7 @@ aap2_workflows:
     aap2_workflow_extra_vars:
       image_tag: app
       build_folder: app-repo
+      repo_url: "{{ image_mode_application_repo }}"
     aap2_workflow_nodes:
       - node_name: image-mode-build-scan
         approval: false

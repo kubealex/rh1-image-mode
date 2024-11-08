@@ -1,8 +1,6 @@
 ---
 - name: RH1 Demo | Build RHEL Image Mode container
   hosts: build_host
-  vars_files:
-    - vars.yml
   tasks:
     - name: RH1 Demo | Set working directory
       ansible.builtin.set_fact:
@@ -10,7 +8,7 @@
 
     - name: RH1 Demo | Clone repo
       ansible.builtin.git:
-        repo: "{{ image_mode_application_repo }}"
+        repo: "{{ repo_url }}"
         dest: "{{ workdir }}/{{ build_folder }}"
 
     - name: RH1 Demo | Login to registry
