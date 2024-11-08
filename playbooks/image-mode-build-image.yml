@@ -8,10 +8,10 @@
       ansible.builtin.set_fact:
         workdir: "/home/{{ ansible_user }}/rhel-image-mode"
 
-    - name: RH1 Demo | Clone app repo
+    - name: RH1 Demo | Clone repo
       ansible.builtin.git:
         repo: "{{ image_mode_application_repo }}"
-        dest: "{{ workdir }}/image-repo"
+        dest: "{{ workdir }}/{{ build_folder }}"
 
     - name: RH1 Demo | Login to registry
       containers.podman.podman_login:
@@ -21,14 +21,14 @@
 
     - name: RH1 Demo | Build RHEL Image
       containers.podman.podman_image:
-        name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:app"
+        name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}"
         build_args:
           force_rm: true
-        path: "{{ workdir }}/image-repo"
+        path: "{{ workdir }}/{{ build_folder }}"
 
     - name: RH1 Demo | Run Image Vulnerability Scan
       ansible.builtin.shell:
-        cmd: "trivy image --db-repository public.ecr.aws/aquasecurity/trivy-db:2 --scanners vuln {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:app"
+        cmd: "trivy image --db-repository public.ecr.aws/aquasecurity/trivy-db:2 --scanners vuln {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}"
       register: image_scan
 
     - name: RH1 Demo | Print scan results

@@ -12,5 +12,5 @@
       actions:
         - debug:
         - run_job_template:
-            name: "[RH1 Demo] Build Image Mode update"
+            name: "[RH1 Demo] Build Image Mode application update"
             organization: Default

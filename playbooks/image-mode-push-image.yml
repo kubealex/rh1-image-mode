@@ -10,10 +10,10 @@
 
     - name: RH1 Demo | Push RHEL Image
       containers.podman.podman_image:
-        name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:vm"
+        name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}"
         build_args:
           force_rm: true
-        path: "{{ workdir }}/image-repo"
+        path: "{{ workdir }}/{{ build_folder }}"
         push: true
 
     - name: RH1 Demo | Cleanup local working directory

@@ -42,7 +42,7 @@ aap2_templates:
     aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
     aap2_template_project: RH1 Image Mode Demo
     # ------------------------------------
-  - aap2_template_name: "[RH1 Image Mode Demo] Push updated image"
+  - aap2_template_name: "[RH1 Image Mode Demo] Push image"
     aap2_template_playbook: playbooks/image-mode-push-image.yml
     aap2_template_credentials:
       - RH1 Image Mode Demo - Linux Credentials
@@ -63,16 +63,13 @@ aap2_templates:
     aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
     aap2_template_project: RH1 Image Mode Demo
     # ------------------------------------
-  - aap2_template_name: "[RH1 Image Mode Demo] Build SOE Image"
-    aap2_template_playbook: playbooks/image-mode-build-soe-image.yml
-    aap2_template_credentials:
-      - RH1 Image Mode Demo - Linux Credentials
-    aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
-    aap2_template_project: RH1 Image Mode Demo
 
 aap2_workflows:
-  - aap2_workflow_name: "[RH1 Image Mode Demo] Build Image Mode update"
+  - aap2_workflow_name: "[RH1 Image Mode Demo] Build Image Mode application update"
     aap2_workflow_project: RH1 Image Mode Demo
+    aap2_workflow_extra_vars:
+      image_tag: app
+      build_folder: app-repo
     aap2_workflow_nodes:
       - node_name: image-mode-build-scan
         approval: false
@@ -86,7 +83,72 @@ aap2_workflows:
           - image-mode-push
       - node_name: image-mode-push
         approval: false
-        node_job_template: "[RH1 Image Mode Demo] Push updated image"
+        node_job_template: "[RH1 Image Mode Demo] Push image"
+
+  - aap2_workflow_name: "[RH1 Image Mode Demo] Build Image Mode application image"
+    aap2_workflow_project: RH1 Image Mode Demo
+    aap2_workflow_extra_vars:
+      image_tag: app
+      build_folder: app-repo
+    aap2_workflow_nodes:
+      - node_name: image-mode-build-scan
+        approval: false
+        nodes_on_success:
+          - image-mode-approve-scan
+        node_job_template: "[RH1 Image Mode Demo] Build and scan image"
+      - node_name: image-mode-approve-scan
+        approval: true
+        description: "Review the RHEL Image scan and proceed with push"
+        nodes_on_success:
+          - image-mode-push
+      - node_name: image-mode-push
+        approval: false
+        node_job_template: "[RH1 Image Mode Demo] Push image"
+
+  - aap2_workflow_name: "[RH1 Image Mode Demo] Build Image SOE Image"
+    aap2_workflow_project: RH1 Image Mode Demo
+    aap2_workflow_extra_vars:
+      image_tag: soe
+      build_folder: soe-repo
+    aap2_workflow_nodes:
+      - node_name: image-mode-build-scan
+        approval: false
+        nodes_on_success:
+          - image-mode-approve-scan
+        node_job_template: "[RH1 Image Mode Demo] Build and scan image"
+      - node_name: image-mode-approve-scan
+        approval: true
+        description: "Review the RHEL Image scan and proceed with push"
+        nodes_on_success:
+          - image-mode-push
+      - node_name: image-mode-push
+        approval: false
+        node_job_template: "[RH1 Image Mode Demo] Push image"
+
+  - aap2_workflow_name: "[RH1 Image Mode Demo] Build Image Mode application ISO"
+    aap2_workflow_project: RH1 Image Mode Demo
+    aap2_workflow_extra_vars:
+      image_tag: app
+      build_folder: app-repo
+    aap2_workflow_nodes:
+      - node_name: image-mode-build-scan
+        approval: false
+        nodes_on_success:
+          - image-mode-approve-scan
+        node_job_template: "[RH1 Image Mode Demo] Build and scan image"
+      - node_name: image-mode-approve-scan
+        approval: true
+        description: "Review the RHEL Image scan and proceed with push"
+        nodes_on_success:
+          - image-mode-push
+      - node_name: image-mode-push
+        approval: false
+        node_job_template: "[RH1 Image Mode Demo] Push image"
+        nodes_on_success:
+          - image-mode-convert-iso
+      - node_name: image-mode-convert-iso
+        approval: false
+        node_job_template: "[RH1 Image Mode Demo] Build ISO Image"
 
 ####### EDA CONTROLLER VARIABLES ########
 eda_projects:
