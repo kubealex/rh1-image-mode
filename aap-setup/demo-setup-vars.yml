@@ -1,11 +1,10 @@
 main_repo_url: https://github.com/kubealex/rh1-image-mode.git
+image_mode_application_repo: https://github.com/kubealex/rh1-image-mode-container-app.git
+image_mode_soe_repo: https://github.com/kubealex/rh1-image-mode-soe
 
 rhel_image_mode_registry_url: service-vm.rh-lab.labs:3000
 rhel_image_mode_registry_username: gitea
 rhel_image_mode_registry_password: redhat
-
-image_mode_application_repo: https://github.com/kubealex/rh1-image-mode-container-app.git
-image_mode_soe_repo: https://github.com/kubealex/rh1-image-mode-soe
 
 aap2_controller_url: https://aap.rh-lab.labs:8443
 aap2_controller_username: admin
@@ -15,23 +14,11 @@ eda_controller_url: https://aap.rh-lab.labs:8445
 eda_controller_username: admin
 eda_controller_password: redhat
 
-aap2_ee: service-vm.rh-lab.labs:3000/gitea/aap2-demo-ee # to be replaced based on your setup
-aap2_de: service-vm.rh-lab.labs:3000/gitea/eda-decision-env # to be replaced based on your setup
-
-
-
 aap2_projects:
   - name: "RH1 Image Mode Demo"
     scm_url: "{{ main_repo_url }}"
     scm_branch: "main"
-    default_ee: "RH1 Image Mode Demo EE"
-  # ------------------------------------
-  # ------------------------------------
-
-aap2_execution_envs:
-  - ee_name: "RH1 Image Mode Demo EE"
-    ee_image: "{{ aap2_ee }}"
-    ee_pull_policy: "always"
+    default_ee: "Minimal execution environment"
   # ------------------------------------
   # ------------------------------------
 
@@ -217,10 +204,6 @@ eda_projects:
   - name: "RH1 Image Mode Demo Project"
     git_url: https://github.com/kubealex/rh1-image-mode
     description: "Demo project to show RHEL Image mode in action"
-eda_decision_envs:
-  - name: "kubealex-eda"
-    image_url: "{{ aap2_de }}"
-    description: "EDA Decision Environment"
 eda_credentials:
   - name: AAP2 Credentials
     username: "{{ aap2_controller_username }}"
@@ -231,6 +214,6 @@ eda_activations:
   - name: github-webhook
     rulebook: rulebook-github.yml
     project_name: "RH1 Image Mode Demo Project"
-    decision_env: "kubealex-eda"
+    decision_env: "Default Decision Environment"
     credentials:
       - "AAP2 Credentials"
