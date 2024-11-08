@@ -223,9 +223,9 @@ eda_decision_envs:
     description: "EDA Decision Environment"
 eda_credentials:
   - name: AAP2 Credentials
-    username: admin
-    password: redhat
-    host: "https://aap.rh-lab.labs/api/controller/"
+    username: "{{ aap2_controller_username }}"
+    password: "{{ aap2_controller_password }}"
+    host: "{{ aap2_controller_url }}"
     credential_type: Red Hat Ansible Automation Platform
 eda_activations:
   - name: github-webhook
