@@ -3,3 +3,4 @@ collections:
   - ansible.controller
   - ansible.eda
   - community.general
+  - containers.podman
