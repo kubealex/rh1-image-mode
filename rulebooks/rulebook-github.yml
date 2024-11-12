@@ -7,7 +7,7 @@
         host: 0.0.0.0
         port: 5010
   rules:
-    - name: RH1 Demo | Webhook | React to new tag creation
+    - name: RH1 Demo | Webhook | React to new tag creation - Application
       condition: event.meta.headers["X-Github-Event"] == 'create' and event.payload.repository.name == 'rh1-image-mode-container-app'
       actions:
         - debug:
@@ -15,7 +15,7 @@
             name: "[RH1][Image Mode Demo] Build Image Mode application update"
             organization: Default
 
-    - name: RH1 Demo | Webhook | React to new tag creation
+    - name: RH1 Demo | Webhook | React to new tag creation - SOE
       condition: event.meta.headers["X-Github-Event"] == 'create' and event.payload.repository.name == 'rh1-image-mode-soe'
       actions:
         - debug:
