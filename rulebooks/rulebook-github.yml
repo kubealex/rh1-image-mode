@@ -14,6 +14,9 @@
         - run_workflow_template:
             name: "[RH1][Image Mode Demo] Build Image Mode application image"
             organization: Default
+            job_args:
+              extra_vars:
+                git_tag: "{{ event.payload.ref }}"
 
     - name: RH1 Demo | Webhook | React to new tag creation - SOE
       condition: event.meta.headers["X-Github-Event"] == 'create' and event.payload.repository.name == 'rh1-image-mode-soe'
@@ -22,3 +25,6 @@
         - run_workflow_template:
             name: "[RH1][Image Mode Demo] Build Image Mode SOE Image"
             organization: Default
+            job_args:
+              extra_vars:
+                git_tag: "{{ event.payload.ref }}"
