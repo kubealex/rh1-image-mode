@@ -12,7 +12,7 @@
       actions:
         - debug:
         - run_workflow_template:
-            name: "[RH1][Image Mode Demo] Build Image Mode application update"
+            name: "[RH1][Image Mode Demo] Build Image Mode application image"
             organization: Default
 
     - name: RH1 Demo | Webhook | React to new tag creation - SOE
