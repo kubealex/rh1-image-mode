@@ -20,5 +20,5 @@
       actions:
         - debug:
         - run_job_template:
-            name: "[RH1][Image Mode Demo] Build Image SOE Image"
+            name: "[RH1][Image Mode Demo] Build Image Mode SOE Image"
             organization: Default

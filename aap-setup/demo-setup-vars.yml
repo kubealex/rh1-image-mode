@@ -152,7 +152,7 @@ aap2_workflows:
         approval: false
         node_job_template: "[RH1][Image Mode Demo] Push image"
 
-  - aap2_workflow_name: "[RH1][Image Mode Demo] Build Image SOE Image"
+  - aap2_workflow_name: "[RH1][Image Mode Demo] Build Image Mode SOE Image"
     aap2_workflow_project: RH1 Image Mode Demo
     aap2_workflow_extra_vars:
       image_tag: soe
