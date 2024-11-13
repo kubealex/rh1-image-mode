@@ -11,7 +11,7 @@
       condition: event.meta.headers["X-Github-Event"] == 'create' and event.payload.repository.name == 'rh1-image-mode-container-app'
       actions:
         - debug:
-        - run_job_template:
+        - run_workflow_template:
             name: "[RH1][Image Mode Demo] Build Image Mode application update"
             organization: Default
 
@@ -19,6 +19,6 @@
       condition: event.meta.headers["X-Github-Event"] == 'create' and event.payload.repository.name == 'rh1-image-mode-soe'
       actions:
         - debug:
-        - run_job_template:
+        - run_workflow_template:
             name: "[RH1][Image Mode Demo] Build Image Mode SOE Image"
             organization: Default
