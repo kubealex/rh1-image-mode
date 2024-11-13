@@ -6,16 +6,24 @@
       ansible.builtin.set_fact:
         workdir: "/home/{{ ansible_user }}/rhel-image-mode"
 
+    # - name: RH1 Demo | Push RHEL Image
+    #   containers.podman.podman_image:
+    #     name: "{{ item }}"
+    #     build_args:
+    #       force_rm: true
+    #     path: "{{ workdir }}/{{ build_folder }}"
+    #     push: true
+    #   loop:
+    #       - "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}"
+    #       - "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}-{{ git_tag }}"
+
     - name: RH1 Demo | Push RHEL Image
       containers.podman.podman_image:
-        name: "{{ item }}"
+        name: "quay.io/kubealex/rhel-image-mode-demo:soe-v1.0"
         build_args:
           force_rm: true
         path: "{{ workdir }}/{{ build_folder }}"
         push: true
-      loop:
-          - "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}"
-          - "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}-{{ git_tag }}"
 
     - name: RH1 Demo | Cleanup local working directory
       ansible.builtin.file:
