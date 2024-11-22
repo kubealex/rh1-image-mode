@@ -7,23 +7,23 @@
         host: 0.0.0.0
         port: 5010
   rules:
-    - name: RH1 Demo | Webhook | React to new tag creation - Application
-      condition: event.meta.headers["X-Github-Event"] == 'create' and event.payload.repository.name == 'rh1-image-mode-container-app'
-      actions:
-        - debug:
-        - run_workflow_template:
-            name: "[RH1][Image Mode Demo] Build Image Mode application image"
-            organization: Default
-            job_args:
-              extra_vars:
-                git_tag: "{{ event.payload.ref }}"
-
     - name: RH1 Demo | Webhook | React to new tag creation - Application ISO
       condition: event.meta.headers["X-Github-Event"] == 'create' and event.payload.repository.name == 'rh1-image-mode-container-app' and event.payload.ref is search("iso", ignorecase=true)
       actions:
         - debug:
         - run_workflow_template:
             name: "[RH1][Image Mode Demo] Build Image Mode application ISO"
+            organization: Default
+            job_args:
+              extra_vars:
+                git_tag: "{{ event.payload.ref }}"
+
+    - name: RH1 Demo | Webhook | React to new tag creation - Application
+      condition: event.meta.headers["X-Github-Event"] == 'create' and event.payload.repository.name == 'rh1-image-mode-container-app'
+      actions:
+        - debug:
+        - run_workflow_template:
+            name: "[RH1][Image Mode Demo] Build Image Mode application image"
             organization: Default
             job_args:
               extra_vars:
