@@ -45,7 +45,7 @@
           %post
           cat << EOF >> /home/bootc-user/load_application_data.sh
           sudo mysql -uroot -e "CREATE DATABASE petclinic"
-          sudo mysql -uroot petclinic < /tmp/petclinic.sql
+          sudo mysql -uroot petclinic < /opt/petclinic.sql
           sudo systemctl restart petclinic
           EOF
           chown bootc-user:bootc-user /home/bootc-user/load_application_data.sh
