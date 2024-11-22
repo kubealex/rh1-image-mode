@@ -8,6 +8,7 @@
         image_tag: app
 
     - name: RH1 Demo | Login to registry
+      no_log: true
       containers.podman.podman_login:
         registry: "{{ item.registry }}"
         username: "{{ item.username }}"
@@ -16,6 +17,18 @@
         - registry: "{{ rhel_image_mode_registry_url }}"
           username: "{{ rhel_image_mode_registry_username }}"
           password: "{{ rhel_image_mode_registry_password }}"
+        - registry: "{{ redhat_registry_url }}"
+          username: "{{ redhat_registry_username }}"
+          password: "{{ redhat_registry_password }}"
+
+    - name: RH1 Demo | Login to registry
+      become: true
+      no_log: true
+      containers.podman.podman_login:
+        registry: "{{ item.registry }}"
+        username: "{{ item.username }}"
+        password: "{{ item.password }}"
+      loop:
         - registry: "{{ redhat_registry_url }}"
           username: "{{ redhat_registry_username }}"
           password: "{{ redhat_registry_password }}"
@@ -31,8 +44,7 @@
       register: qcow_image
 
 
-    - name: RH1 Demo | Upload kickstart file to file server
-      become: true
+    - name: RH1 Demo | Embed Kickstart into configuration
       ansible.builtin.copy:
         content: |
           [customizations.installer.kickstart]
