@@ -70,7 +70,6 @@
           chown bootc-user:bootc-user /home/bootc-user/load_application_data.sh
           chmod 755 /home/bootc-user/load_application_data.sh
           %end
-          ostreecontainer --no-signature-verification  --url={{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}
           """
         dest: "{{ workdir }}/config.toml"
 
