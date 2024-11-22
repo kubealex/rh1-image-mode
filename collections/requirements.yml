@@ -1,6 +1,7 @@
 ---
 collections:
   - ansible.controller
+  - ansible.posix
   - ansible.eda
   - community.general
   - containers.podman
