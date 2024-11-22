@@ -68,7 +68,7 @@
       become: true
       ansible.posix.synchronize:
         src: "{{ workdir }}/output/bootiso/install.iso"
-        dest: /var/www/html/rhel9.iso
+        dest: /var/www/html/bootc/rhel9.iso
       delegate_to: "{{ groups['build_host'][0] }}"
 
     - name: RH1 Demo | Upload kickstart file to file server
