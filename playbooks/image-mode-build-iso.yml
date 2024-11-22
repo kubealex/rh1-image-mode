@@ -65,12 +65,14 @@
         image_tag: app
 
     - name: RH1 Demo | Upload ISO file to file server
+      become: true
       ansible.posix.synchronize:
         src: "{{ workdir }}/output/bootiso/install.iso"
         dest: /var/www/html/rhel9.iso
       delegate_to: "{{ groups['build_host'][0] }}"
 
     - name: RH1 Demo | Upload kickstart file to file server
+      become: true
       ansible.builtin.copy:
         content: |
           reboot
@@ -86,7 +88,7 @@
           timezone Europe/Rome
           rootpw redhat
           ostreecontainer --no-signature-verification  --url={{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}
-        dest: /var/www/html/ks.cfg
+        dest: /var/www/html/bootc/ks.cfg
 
     # - name: RH1 Demo | Cleanup local working directory
     #   ansible.builtin.file:
