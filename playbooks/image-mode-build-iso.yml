@@ -62,6 +62,7 @@
           timezone Europe/Rome
           rootpw redhat
           %post
+          bootc switch --mutate-in-place --transport registry {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}
           cat << EOF >> /home/bootc-user/load_application_data.sh
           sudo mysql -uroot -e "CREATE DATABASE petclinic"
           sudo mysql -uroot petclinic < /opt/petclinic.sql
@@ -69,7 +70,6 @@
           EOF
           chown bootc-user:bootc-user /home/bootc-user/load_application_data.sh
           chmod 755 /home/bootc-user/load_application_data.sh
-          bootc switch --mutate-in-place --transport registry {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}
           %end
           """
         dest: "{{ workdir }}/config.toml"
