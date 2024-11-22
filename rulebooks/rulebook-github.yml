@@ -39,5 +39,3 @@
             job_args:
               extra_vars:
                 git_tag: "{{ event.payload.ref }}"
-
-
