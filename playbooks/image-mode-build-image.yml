@@ -12,6 +12,7 @@
         dest: "{{ workdir }}/{{ build_folder }}"
 
     - name: RH1 Demo | Login to registry
+      no_log: true
       containers.podman.podman_login:
         registry: "{{ item.registry }}"
         username: "{{ item.username }}"
