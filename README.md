@@ -6,6 +6,25 @@ This repo is a working asset to deliver and replicate the RHEL Image mode Sessio
 
 The folder [aap-setup](./aap-setup/) contains all required bits to configure all templates, credentials and inventories as well as rulebook activations on EDA that are needed for the demo.
 
+### Prerequisites
+Having AAP 2.4+ installed and exposing EDA and Controller APIs  
+A container registry available (in this example we are using [Gitea](https://docs.gitea.com/usage/packages/container) but you can use also local Quay or simple [docker registry](https://www.redhat.com/en/blog/simple-container-registry))  
+
+### Lab deployment
+Install the required ansible collections by running:
+```
+$ ansible-galaxy install -r roles/requirements.yml --force
+```
+Add Red Hat Automation Hub as primary content resource as shown [here](https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/1.2/html/getting_started_with_red_hat_ansible_automation_hub/proc-configure-automation-hub-server#proc-configure-automation-hub-server)
+and then install the other required collections:
+```
+$ ansible-galaxy install -r aap-setup/requirements.yml --force
+```
+Then run the lab deployment playbook like:  
+```
+$ ansible-playbook aap-setup/configure-aap.yml -e aap-setup/demo-setup-vars.yml -i inventory
+```
+
 ### demo-setup-vars.yml
 
 This file contains all required variables to populate projects, credentials and templates:
