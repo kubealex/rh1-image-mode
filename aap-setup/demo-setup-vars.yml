@@ -1,6 +1,6 @@
 main_repo_url: https://github.com/kubealex/rh1-image-mode.git
-image_mode_application_repo:
-image_mode_soe_repo:
+image_mode_application_repo: https://github.com/kubealex/rh1-image-mode-container-app.git
+image_mode_soe_repo: https://github.com/kubealex/rh1-image-mode-soe
 
 rhel_image_mode_registry_url:
 rhel_image_mode_registry_username:
@@ -10,13 +10,23 @@ redhat_registry_url:
 redhat_registry_username:
 redhat_registry_password:
 
-aap2_controller_url:
-aap2_controller_username:
-aap2_controller_password:
+aap2_controller_url: https://aap.rh-lab.labs:8443
+aap2_controller_username: admin
+aap2_controller_password: redhat
 
-eda_controller_url:
-eda_controller_username:
-eda_controller_password:
+eda_controller_url: https://aap.rh-lab.labs:8445
+eda_controller_username: admin
+eda_controller_password: redhat
+
+automation_hub_url: https://console.redhat.com/api/automation-hub/content/published/
+automation_hub_auth_url: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
+authomation_hub_token:
+
+aap2_galaxy_credentials:
+  - name: RH1 Image Mode Demo - Galaxy Credentials
+    galaxy_url: "{{ automation_hub_url }}"
+    galaxy_auth_url: "{{ automation_hub_auth_url }}"
+    galaxy_token: "{{ authomation_hub_token }}"
 
 aap2_projects:
   - name: "RH1 Image Mode Demo"
@@ -218,7 +228,7 @@ aap2_workflows:
 ####### EDA CONTROLLER VARIABLES ########
 eda_projects:
   - name: "RH1 Image Mode Demo Project"
-    git_url: "{{ main_repo_url }}"
+    git_url: https://github.com/kubealex/rh1-image-mode
     description: "Demo project to show RHEL Image mode in action"
 eda_credentials:
   - name: AAP2 Credentials
