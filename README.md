@@ -2,9 +2,17 @@
 
 This repo is a working asset to deliver and replicate the RHEL Image mode Session running at Red Hat One 2025.
 
-<details>
-
-<summary>AAP Setup</summary>
+- [AAP Setup](#aap-setup)
+   * [Prerequisites](#prerequisites)
+   * [Configuring webhooks for GitHub](#configuring-webhooks-for-github)
+   * [Lab deployment](#lab-deployment)
+   * [demo-setup-vars.yml](#demo-setup-varsyml)
+- [Inventory](#inventory)
+   * [Demo use cases](#demo-use-cases)
+   * [Creating a SOE image](#creating-a-soe-image)
+   * [Creating the application ISO image](#creating-the-application-iso-image)
+   * [Deploy our ISO on our device](#deploy-our-iso-on-our-device)
+   * [Update the image with a new version of the Java Runtime](#update-the-image-with-a-new-version-of-the-java-runtime)
 
 ## AAP Setup
 
@@ -102,7 +110,7 @@ Then run the lab deployment playbook like:
 $ ansible-playbook aap-setup/configure-aap.yml -i inventory
 ```
 
-## Inventory
+### Inventory
 
 The inventory file contains two groups, *webserver* and *build_host* that are respectively the server providing access to the ISO and the host that is needed to build the images. Adapt it to match your environment.
 
@@ -113,11 +121,6 @@ The inventory file contains two groups, *webserver* and *build_host* that are re
 
     [webserver]
     rhel-bootc.rh-lab.labs
-
-</details>
-<details>
-
-<summary>Demo use cases</summary>
 
 ## Demo use cases
 
@@ -238,5 +241,3 @@ And that the application is running:
 ```bash
 sudo systemctl status mysqld petclinic
 ```
-
-</details>
