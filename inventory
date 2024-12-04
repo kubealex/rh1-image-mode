@@ -1,5 +1,5 @@
 [build_host]
-rhel-bootc.rh-lab.labs ansible_user=sysadmin ansible_password=redhat
+rhel-bootc.rh-lab.labs
 
 [webserver]
-rhel-bootc.rh-lab.labs ansible_user=sysadmin ansible_password=redhat
+rhel-bootc.rh-lab.labs
