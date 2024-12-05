@@ -39,3 +39,26 @@
         path: "{{ workdir }}/output"
         state: directory
         mode: "0775"
+
+- name: RH1 Demo | Build RHEL Image Mode container
+  hosts: webserver
+  tasks:
+    - name: RH1 Demo | Setup httpd
+      become: true
+      block:
+        - name: RH1 Demo | Ensure httpd is present
+          ansible.builtin.dnf:
+            name: httpd
+            state: present
+
+        - name: RH1 Demo | Create folder for bootc bits
+          ansible.builtin.file:
+            path: /var/www/html/bootc/
+            state: directory
+            mode: "0755"
+
+        - name: RH1 Demo | Ensure httpd unit is enabled
+          ansible.builtin.service:
+            name: httpd
+            enabled: true
+            state: restarted
