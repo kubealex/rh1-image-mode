@@ -5,3 +5,26 @@
     - demo-setup-vars.yml
   roles:
     - role: role_aap_controller_setup
+  post_tasks:
+    - name: Configure host in static inentory
+      ansible.controller.host:
+        controller_host: "{{ aap2_controller_url }}"
+        controller_username: "{{ aap2_controller_username }}"
+        controller_password: "{{ aap2_controller_password }}"
+        validate_certs: "{{ aap2_controller_validate_ssl | default(false, true) }}"
+        inventory: RH1 Image Mode Demo - SCM Inventory
+        name: "{{ item }}"
+        enabled: true
+      loop: "{{ aap2_inventory_static_hosts }}"
+
+    - name: Configure host groups in static inentory
+      ansible.controller.host:
+        controller_host: "{{ aap2_controller_url }}"
+        controller_username: "{{ aap2_controller_username }}"
+        controller_password: "{{ aap2_controller_password }}"
+        validate_certs: "{{ aap2_controller_validate_ssl | default(false, true) }}"
+        inventory: RH1 Image Mode Demo - SCM Inventory
+        name: "{{ item.name }}"
+        hosts: "{{ item.hosts }}"
+
+      loop: "{{ aap2_inventory_static_groups }}"

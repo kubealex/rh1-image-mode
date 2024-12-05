@@ -25,6 +25,9 @@ automation_hub_token:
 inventory_servers_username:
 inventory_servers_password:
 
+webserver_hostname:
+build_server_hostname:
+
 aap2_galaxy_credentials:
   - name: RH1 Image Mode Demo - Galaxy Credentials
     galaxy_url: "{{ automation_hub_url }}"
@@ -114,12 +117,25 @@ aap2_inventories:
   # ------------------------------------
   # ------------------------------------
 
-aap2_inventory_sources:
-  - aap2_inventory_source_name: RH1 Image Mode Demo - SCM Inventory Source
-    aap2_inventory_source_inventory: RH1 Image Mode Demo - SCM Inventory
-    aap2_inventory_source_type: scm
-    aap2_inventory_source_project: "RH1 Image Mode Demo"
-    aap2_inventory_source_path: inventory
+aap2_inventory_static_hosts:
+  - "{{ build_server_hostname }}"
+  - "{{ webserver_hostname }}"
+
+aap2_inventory_static_groups:
+  - name: build_host
+    hosts:
+      - "{{ build_server_hostname }}"
+  - name: webserver
+    hosts:
+      - "{{ webserver_hostname }}"
+
+
+# aap2_inventory_sources:
+#   - aap2_inventory_source_name: RH1 Image Mode Demo - SCM Inventory Source
+#     aap2_inventory_source_inventory: RH1 Image Mode Demo - SCM Inventory
+#     aap2_inventory_source_type: scm
+#     aap2_inventory_source_project: "RH1 Image Mode Demo"
+#     aap2_inventory_source_path: inventory
   # ------------------------------------
   # ------------------------------------
 
