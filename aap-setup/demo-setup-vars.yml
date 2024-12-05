@@ -1,32 +1,43 @@
+### Main repository URL pointing to this repo
 main_repo_url: https://github.com/kubealex/rh1-image-mode.git
-image_mode_application_repo: https://github.com/kubealex/rh1-image-mode-container-app.git
-image_mode_soe_repo: https://github.com/kubealex/rh1-image-mode-soe
 
+### Variables to hold the location of repo forks
+image_mode_application_repo: https://github.com/YOURGITHUBUSERNAME/rh1-image-mode-container-app.git
+image_mode_soe_repo: https://github.com/YOURGITHUBUSERNAME/rh1-image-mode-soe
+
+### Container registry credentials where you will push images
 rhel_image_mode_registry_url:
 rhel_image_mode_registry_username:
 rhel_image_mode_registry_password:
 
+### Red Hat Container Registry authentication (use Red Hat ID Username/Password or service account)
 redhat_registry_url:
 redhat_registry_username:
 redhat_registry_password:
 
+### URL and creds for AAP2 Controller
 aap2_controller_url: https://aap.rh-lab.labs:8443
 aap2_controller_username: admin
 aap2_controller_password: redhat
 
+### URL and creds for AAP2 EDA Controller
 eda_controller_url: https://aap.rh-lab.labs:8445
 eda_controller_username: admin
 eda_controller_password: redhat
 
+### URL for Red Hat Automation Hub
 automation_hub_url: https://console.redhat.com/api/automation-hub/content/published/
 automation_hub_auth_url: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
-automation_hub_token:
+authomation_hub_token:
 
+### Hostname/IP of the webserver and build server
+webserver_hostname:
+build_server_hostname:
+
+### Credentials for hosts
 inventory_servers_username:
 inventory_servers_password:
 
-webserver_hostname:
-build_server_hostname:
 
 aap2_galaxy_credentials:
   - name: RH1 Image Mode Demo - Galaxy Credentials
@@ -118,14 +129,18 @@ aap2_inventories:
   # ------------------------------------
 
 aap2_inventory_static_hosts:
-  - "{{ build_server_hostname }}"
-  - "{{ webserver_hostname }}"
+  - name: "{{ build_server_hostname }}"
+    inventory: RH1 Image Mode Demo - SCM Inventory
+  - name: "{{ webserver_hostname }}"
+    inventory: RH1 Image Mode Demo - SCM Inventory
 
 aap2_inventory_static_groups:
   - name: build_host
+    inventory: RH1 Image Mode Demo - SCM Inventory
     hosts:
       - "{{ build_server_hostname }}"
   - name: webserver
+    inventory: RH1 Image Mode Demo - SCM Inventory
     hosts:
       - "{{ webserver_hostname }}"
 

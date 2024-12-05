@@ -66,7 +66,7 @@ This file contains all required variables to populate projects, credentials and 
 ### Main repository URL pointing to this repo
 main_repo_url: https://github.com/kubealex/rh1-image-mode.git
 
-### Additional repos that need to be forked
+### Variables to hold the location of repo forks
 image_mode_application_repo: https://github.com/YOURGITHUBUSERNAME/rh1-image-mode-container-app.git
 image_mode_soe_repo: https://github.com/YOURGITHUBUSERNAME/rh1-image-mode-soe
 
@@ -95,6 +95,10 @@ automation_hub_url: https://console.redhat.com/api/automation-hub/content/publis
 automation_hub_auth_url: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
 authomation_hub_token:
 
+### Hostname/IP of the webserver and build server
+webserver_hostname:
+build_server_hostname:
+
 ### Credentials for hosts
 inventory_servers_username:
 inventory_servers_password:
@@ -109,18 +113,6 @@ Then run the lab deployment playbook like:
 ```
 $ ansible-playbook aap-setup/configure-aap.yml -i inventory
 ```
-
-### Inventory
-
-The inventory file contains two groups, *webserver* and *build_host* that are respectively the server providing access to the ISO and the host that is needed to build the images. Adapt it to match your environment.
-
-**The hosts will use the credentials defined in the demo-setup-vars.yml file (inventory_servers_)**
-
-    [build_host]
-    rhel-bootc.rh-lab.labs
-
-    [webserver]
-    rhel-bootc.rh-lab.labs
 
 ## Demo use cases
 
