@@ -38,7 +38,6 @@ build_server_hostname:
 inventory_servers_username:
 inventory_servers_password:
 
-
 aap2_galaxy_credentials:
   - name: RH1 Image Mode Demo - Galaxy Credentials
     galaxy_url: "{{ automation_hub_url }}"
