@@ -2,9 +2,13 @@
 collections:
   - ansible.controller
   - ansible.eda
+  - ansible.posix
   - community.general
+
 roles:
   - name: role_aap_controller_setup
     src: https://github.com/kubealex/role_aap_controller_setup.git
   - name: role_eda_controller_setup
     src: https://github.com/kubealex/role_eda_controller_setup.git
+  - name: ansible-gitea-podman
+    src: https://github.com/kubealex/ansible-gitea-podman.git

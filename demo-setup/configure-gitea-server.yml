@@ -1,0 +1,97 @@
+---
+- name: RH1 Demo | Generate temporary inventory for Gitea
+  hosts: localhost
+  vars_files:
+    - demo-setup-vars.yml
+  tasks:
+    - name: RH1 Demo | Add host to in-memory inventory
+      ansible.builtin.add_host:
+        hostname: "{{ gitea_server_hostname  }}"
+        ansible_user: "{{ gitea_server_username }}"
+        ansible_password: "{{ gitea_server_username }}"
+        ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+        groups:
+          - "gitea"
+
+- name: RH1 Demo | Install Gitea Instance
+  hosts: gitea
+  vars_files:
+    - demo-setup-vars.yml
+  roles:
+    - ansible-gitea-podman
+
+- name: RH1 Demo | Configure Gitea instance
+  hosts: localhost
+  tasks:
+    - name: RH1 Demo | Get Gitea token
+      ansible.builtin.uri:
+        url: "{{ gitea_server_hostname }}:3000/api/v1/users/{{ gitea_server_username }}/tokens"
+        user: "{{ gitea_server_username }}"
+        password: "{{ gitea_server_password }}"
+        method: POST
+        force_basic_auth: true
+        follow_redirects: true
+        body_format: json
+        status_code:
+          - 200
+          - 201
+        body:
+          name: "Gitea token"
+          scopes:
+            - write:repository
+            - write:user
+        validate_certs: false
+      register: _auth_response
+
+    - name: RH1 Demo | Set token as fact
+      ansible.builtin.set_fact:
+        auth_token: "{{ _auth_response.json.sha1 }}"
+
+    - name: RH1 Demo | Migrate Gitea repos
+      ansible.builtin.uri:
+        url: "{{ gitea_server_hostname }}:3000/api/v1/repos/migrate"
+        headers:
+          Authorization: Bearer {{ auth_token }}
+        method: POST
+        force_basic_auth: true
+        follow_redirects: true
+        body_format: json
+        status_code:
+          - 200
+          - 201
+        body:
+          clone_addr: "{{ item.source }}"
+          repo_name: "{{ item.dest }}"
+        validate_certs: false
+      loop:
+        - source: https://github.com/kubealex/rh1-image-mode.git
+          dest: rh1-image-mode
+        - source: https://github.com/kubealex/rh1-image-mode-container-app.git
+          dest: rh1-image-mode-container-app
+        - source: https://github.com/kubealex/rh1-image-mode-soe.git
+          dest: rh1-image-mode-soe
+
+    - name: RH1 Demo | Configure webhooks for repos
+      ansible.builtin.uri:
+        url: "{{ gitea_server_hostname }}/api/v1/repos/{{ gitea_server_username }}/{{ item }}/hooks"
+        headers:
+          Authorization: Bearer {{ auth_token }}
+        method: POST
+        force_basic_auth: true
+        follow_redirects: true
+        body_format: json
+        status_code:
+          - 200
+          - 201
+        body:
+          config:
+            content_type: "json"
+            url: "{{ eda_controller_url | regex_replace(':[0-9]+', '') }}:5010"
+            http_method: POST
+          events:
+            - create
+          type: gitea
+        validate_certs: false
+      loop:
+        - rh1-image-mode-container-app
+        - rh1-image-mode-soe

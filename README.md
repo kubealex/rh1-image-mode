@@ -2,55 +2,33 @@
 
 This repo is a working asset to deliver and replicate the RHEL Image mode Session running at Red Hat One 2025.
 
-- [AAP Setup](#aap-setup)
+- [Demo Setup](#demo-setup)
    * [Prerequisites](#prerequisites)
-   * [Configuring webhooks for GitHub](#configuring-webhooks-for-github)
    * [Lab deployment](#lab-deployment)
    * [demo-setup-vars.yml](#demo-setup-varsyml)
-- [Inventory](#inventory)
-   * [Demo use cases](#demo-use-cases)
+   * [Configure Gitea Instance](#configure-gitea-instance)
+   * [Configure AAP](#configure-aap)
+- [Demo use cases](#demo-use-cases)
    * [Creating a SOE image](#creating-a-soe-image)
    * [Creating the application ISO image](#creating-the-application-iso-image)
    * [Deploy our ISO on our device](#deploy-our-iso-on-our-device)
    * [Update the image with a new version of the Java Runtime](#update-the-image-with-a-new-version-of-the-java-runtime)
 
-## AAP Setup
+## Demo Setup
 
-The folder [aap-setup](./aap-setup/) contains all required bits to configure all templates, credentials and inventories as well as rulebook activations on EDA that are needed for the demo.
+The folder [demo-setup](./demo-setup/) contains all required bits to configure all templates, credentials and inventories as well as rulebook activations on EDA that are needed for the demo.
 
 ### Prerequisites
 - AAP 2.4+ installed and exposing EDA and Controller APIs
 - A container registry available (in this example we are using [Gitea](https://docs.gitea.com/usage/packages/container) but you can use also local Quay or simple [docker registry](https://www.redhat.com/en/blog/simple-container-registry))
 - [GitHub](https://github.com) Account to fork repositories and make changes
 
-> [!NOTE]
-> Your EDA Controller must be reachable from the internet, as we will configure GitHub webooks to trigger the image building process. If you don't have a public IP/domain, you can use [ngrok](https://ngrok.com) to have a free way to publish the URL to the web.
-
-### Configuring webhooks for GitHub
-
-Go to the [SOE repository](https://github.com/kubealex/rh1-image-mode-soe) and fork it, it will be available in your GitHub account (https://github.com/YOURGITHUBUSERNAME/rh1-image-mode-soe.git).
-
-Go to the [SOE repository](https://github.com/kubealex/rh1-image-mode-container-app) and fork it, it will be available in your GitHub account (https://github.com/YOURGITHUBUSERNAME/rh1-image-mode-container-app).
-
-In both repositories, go in the **Settings -> Webhooks** section and click on *Add webhook".
-
-Configure the settings like the image below, adding:
-
-- Your EDA Controller public URL
-- Select *application/json* as Content type
-- Select *Branch or tag creation* as the triggering event
-
-We will need this to automatically trigger builds grabbing information about the tag names, revision, etc.
-
-![](./assets/gh-webhook.png)
-
-
 ### Lab deployment
 
 Install the required ansible collections by running:
 
 ```
-$ ansible-galaxy install -r aap-setup/requirements.yml --force
+$ ansible-galaxy install -r demo-setup/requirements.yml --force
 ```
 
 Retrieve the Red Hat Automation Hub URLs and token from [console.redhat.com](https://console.redhat.com/ansible/automation-hub/token), as you will need them to fill the **automation_hub_** variables below.
@@ -63,13 +41,6 @@ and then install the other required collections:
 This file contains all required variables to populate projects, credentials and templates, edit the values according to your environment:
 
 ``` yaml
-### Main repository URL pointing to this repo
-main_repo_url: https://github.com/kubealex/rh1-image-mode.git
-
-### Variables to hold the location of repo forks
-image_mode_application_repo: https://github.com/YOURGITHUBUSERNAME/rh1-image-mode-container-app.git
-image_mode_soe_repo: https://github.com/YOURGITHUBUSERNAME/rh1-image-mode-soe
-
 ### Container registry credentials where you will push images
 rhel_image_mode_registry_url:
 rhel_image_mode_registry_username:
@@ -98,20 +69,41 @@ authomation_hub_token:
 ### Hostname/IP of the webserver and build server
 webserver_hostname:
 build_server_hostname:
+gitea_server_hostname:
 
 ### Credentials for hosts
 inventory_servers_username:
 inventory_servers_password:
+
+### Custom Gitea setup
+gitea_server_username:
+gitea_server_password:
 ```
 
 It is pre-filled with the demo setup fields, it MUST be changed according to your own environment.
 
-Running the following command will end up creating all required resources:
+### Configure Gitea Instance
 
-Then run the lab deployment playbook like:
+Running the following command will end up creating:
+
+- Containerized Gitea instance with self-signed certs
+- Clone of the demo repositories made available in Gitea
+- Webhooks configured on Gitea
+
+Run the following command to proceed:
 
 ```
-$ ansible-playbook aap-setup/configure-aap.yml -i inventory
+$ ansible-playbook demo-setup/configure-gitea-server.yml -i inventory
+```
+
+The instance will be available at https://{{ gitea_server_hostname }}:3000
+
+### Configure AAP
+
+To configure AAP and all related resources (Projects, inventories, etc) simply run:
+
+```
+$ ansible-playbook demo-setup/configure-aap.yml -i inventory
 ```
 
 ## Demo use cases
