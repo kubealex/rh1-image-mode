@@ -1,20 +1,20 @@
 ### Container registry credentials where you will push images
-rhel_image_mode_registry_url:
-rhel_image_mode_registry_username:
-rhel_image_mode_registry_password:
+rhel_image_mode_registry_url: aap.example.com:3000
+rhel_image_mode_registry_username: lab-user
+rhel_image_mode_registry_password: redhat
 
 ### Red Hat Container Registry authentication (use Red Hat ID Username/Password or service account)
-redhat_registry_url:
+redhat_registry_url: registry.redhat.com
 redhat_registry_username:
 redhat_registry_password:
 
 ### URL and creds for AAP2 Controller
-aap2_controller_url: https://aap.rh-lab.labs:8443
+aap2_controller_url: https://aap.example.com:8443
 aap2_controller_username: admin
 aap2_controller_password: redhat
 
 ### URL and creds for AAP2 EDA Controller
-eda_controller_url: https://aap.rh-lab.labs:8445
+eda_controller_url: https://aap.example.com:8445
 eda_controller_username: admin
 eda_controller_password: redhat
 
@@ -24,17 +24,17 @@ automation_hub_auth_url: https://sso.redhat.com/auth/realms/redhat-external/prot
 authomation_hub_token:
 
 ### Hostname/IP of the webserver and build server
-webserver_hostname:
-build_server_hostname:
-gitea_server_hostname:
+webserver_hostname: aap.example.com
+build_server_hostname: aap.example.com
+gitea_server_hostname: aap.example.com
 
 ### Credentials for hosts
-inventory_servers_username:
-inventory_servers_password:
+inventory_servers_username: lab-user
+inventory_servers_password: redhat
 
 ### Custom Gitea setup
-gitea_server_username:
-gitea_server_password:
+gitea_server_username: lab-user
+gitea_server_password: redhat
 
 aap2_galaxy_credentials:
   - name: RH1 Image Mode Demo - Galaxy Credentials
