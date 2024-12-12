@@ -1,0 +1,321 @@
+### Container registry credentials where you will push images
+rhel_image_mode_registry_url:
+rhel_image_mode_registry_username:
+rhel_image_mode_registry_password:
+
+### Red Hat Container Registry authentication (use Red Hat ID Username/Password or service account)
+redhat_registry_url:
+redhat_registry_username:
+redhat_registry_password:
+
+### URL and creds for AAP2 Controller
+aap2_controller_url: https://aap.rh-lab.labs:8443
+aap2_controller_username: admin
+aap2_controller_password: redhat
+
+### URL and creds for AAP2 EDA Controller
+eda_controller_url: https://aap.rh-lab.labs:8445
+eda_controller_username: admin
+eda_controller_password: redhat
+
+### URL for Red Hat Automation Hub
+automation_hub_url: https://console.redhat.com/api/automation-hub/content/published/
+automation_hub_auth_url: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
+authomation_hub_token:
+
+### Hostname/IP of the webserver and build server
+webserver_hostname:
+build_server_hostname:
+gitea_server_hostname:
+
+### Credentials for hosts
+inventory_servers_username:
+inventory_servers_password:
+
+### Custom Gitea setup
+gitea_server_username:
+gitea_server_password:
+
+aap2_galaxy_credentials:
+  - name: RH1 Image Mode Demo - Galaxy Credentials
+    galaxy_url: "{{ automation_hub_url }}"
+    galaxy_auth_url: "{{ automation_hub_auth_url }}"
+    galaxy_token: "{{ automation_hub_token }}"
+
+aap2_projects:
+  - name: "RH1 Image Mode Demo"
+    scm_url: "https://{{ gitea_server_hostname }}/{{ gitea_server_username }}/rh1-image-mode"
+    scm_branch: "main"
+    default_ee: "Minimal execution environment"
+    force_update: false
+  # ------------------------------------
+  # ------------------------------------
+
+aap2_machine_credentials:
+  - name: "RH1 Image Mode Demo - Linux Credentials"
+    username: "{{ inventory_servers_username }}"
+    password: "{{ inventory_servers_password }}"
+  # ------------------------------------
+  # ------------------------------------
+
+aap2_custom_credentials:
+  - credential_type: RH1 Image Mode Demo - Gitea Auth
+    name: RH1 Image Mode Demo - Gitea Credentials
+    credential_type_inputs:
+      fields:
+        - id: gitea_url
+          type: string
+          label: "Gitea URL"
+          secret: false
+        - id: gitea_user
+          type: string
+          label: "Gitea username"
+          secret: false
+        - id: gitea_pwd
+          type: string
+          label: "Gitea password"
+          secret: true
+      required:
+        - gitea_url
+        - gitea_user
+        - gitea_pwd
+    credential_type_injectors:
+      extra_vars:
+        gitea_server_url: !unsafe "{{ gitea_url }}"
+        gitea_server_username: !unsafe "{{ gitea_user }}"
+        gitea_server_password: !unsafe "{{ gitea_pwd }}"
+    credential_inputs:
+      gitea_url: "{{ gitea_server_hostname }}"
+      gitea_user: "{{ gitea_server_username }}"
+      gitea_pwd: "{{ gitea_server_password }}"
+
+  - credential_type: RH1 Image Mode Demo - Container Registry Auth
+    name: RH1 Image Mode Demo - Container Registry Credentials
+    credential_type_inputs:
+      fields:
+        - id: image_registry_url
+          type: string
+          label: "Image Registry URL"
+          secret: false
+        - id: image_registry_user
+          type: string
+          label: "Image Registry username"
+          secret: false
+        - id: image_registry_pwd
+          type: string
+          label: "Image Registry password"
+          secret: true
+      required:
+        - image_registry_url
+        - image_registry_user
+        - image_registry_pwd
+    credential_type_injectors:
+      extra_vars:
+        rhel_image_mode_registry_url: !unsafe "{{ image_registry_url }}"
+        rhel_image_mode_registry_username: !unsafe "{{ image_registry_user }}"
+        rhel_image_mode_registry_password: !unsafe "{{ image_registry_pwd }}"
+    credential_inputs:
+      image_registry_url: "{{ rhel_image_mode_registry_url }}"
+      image_registry_user: "{{ rhel_image_mode_registry_username }}"
+      image_registry_pwd: "{{ rhel_image_mode_registry_password }}"
+  # ------------------------------------
+  - credential_type: RH1 Image Mode Demo - Redhat Registry Auth
+    name: RH1 Image Mode Demo - Redhat Registry Credentials
+    credential_type_inputs:
+      fields:
+        - id: image_registry_url
+          type: string
+          label: "Image Registry URL"
+          secret: false
+        - id: image_registry_user
+          type: string
+          label: "Image Registry username"
+          secret: false
+        - id: image_registry_pwd
+          type: string
+          label: "Image Registry password"
+          secret: true
+      required:
+        - image_registry_url
+        - image_registry_user
+        - image_registry_pwd
+    credential_type_injectors:
+      extra_vars:
+        redhat_registry_url: !unsafe "{{ image_registry_url }}"
+        redhat_registry_username: !unsafe "{{ image_registry_user }}"
+        redhat_registry_password: !unsafe "{{ image_registry_pwd }}"
+    credential_inputs:
+      image_registry_url: "{{ redhat_registry_url }}"
+      image_registry_user: "{{ redhat_registry_username }}"
+      image_registry_pwd: "{{ redhat_registry_password }}"
+  # ------------------------------------
+
+aap2_inventories:
+  - aap2_inventory_name: RH1 Image Mode Demo - SCM Inventory
+  # ------------------------------------
+  # ------------------------------------
+
+aap2_inventory_static_hosts:
+  - name: "{{ build_server_hostname }}"
+    inventory: RH1 Image Mode Demo - SCM Inventory
+  - name: "{{ webserver_hostname }}"
+    inventory: RH1 Image Mode Demo - SCM Inventory
+  - name: "{{ gitea_server_hostname }}"
+    inventory: RH1 Image Mode Demo - SCM Inventory
+
+aap2_inventory_static_groups:
+  - name: build_host
+    inventory: RH1 Image Mode Demo - SCM Inventory
+    hosts:
+      - "{{ build_server_hostname }}"
+  - name: webserver
+    inventory: RH1 Image Mode Demo - SCM Inventory
+    hosts:
+      - "{{ webserver_hostname }}"
+  - name: gitea
+    inventory: RH1 Image Mode Demo - SCM Inventory
+    hosts:
+      - "{{ gitea_server_hostname }}"
+
+# aap2_inventory_sources:
+#   - aap2_inventory_source_name: RH1 Image Mode Demo - SCM Inventory Source
+#     aap2_inventory_source_inventory: RH1 Image Mode Demo - SCM Inventory
+#     aap2_inventory_source_type: scm
+#     aap2_inventory_source_project: "RH1 Image Mode Demo"
+#     aap2_inventory_source_path: inventory
+  # ------------------------------------
+  # ------------------------------------
+
+aap2_templates:
+  - aap2_template_name: "[RH1][Image Mode Demo] Build and scan image"
+    aap2_template_playbook: playbooks/image-mode-build-image.yml
+    aap2_template_credentials:
+      - RH1 Image Mode Demo - Linux Credentials
+      - RH1 Image Mode Demo - Container Registry Credentials
+      - RH1 Image Mode Demo - Redhat Registry Credentials
+    aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
+    aap2_template_project: RH1 Image Mode Demo
+    # ------------------------------------
+  - aap2_template_name: "[RH1][Image Mode Demo] Push image"
+    aap2_template_playbook: playbooks/image-mode-push-image.yml
+    aap2_template_credentials:
+      - RH1 Image Mode Demo - Linux Credentials
+      - RH1 Image Mode Demo - Container Registry Credentials
+      - RH1 Image Mode Demo - Redhat Registry Credentials
+    aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
+    aap2_template_project: RH1 Image Mode Demo
+    # ------------------------------------
+  - aap2_template_name: "[RH1][Image Mode Demo] Prepare builder server"
+    aap2_template_playbook: playbooks/image-mode-prepare-builder.yml
+    aap2_template_credentials:
+      - RH1 Image Mode Demo - Linux Credentials
+    aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
+    aap2_template_project: RH1 Image Mode Demo
+    # ------------------------------------
+  # - aap2_template_name: "[RH1][Image Mode Demo] Configure Gitea Server"
+  #   aap2_template_playbook: playbooks/image-mode-configure-gitea.yml
+  #   aap2_template_credentials:
+  #     - RH1 Image Mode Demo - Linux Credentials
+  #     - RH1 Image Mode Demo - Gitea Credentials
+  #   aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
+  #   aap2_template_project: RH1 Image Mode Demo
+  #   aap2_template_extra_vars:
+  #     eda_activation_url: "{{ eda_controller_url }}:5010"
+    # ------------------------------------
+  - aap2_template_name: "[RH1][Image Mode Demo] Build ISO Image"
+    aap2_template_playbook: playbooks/image-mode-build-iso.yml
+    aap2_template_credentials:
+      - RH1 Image Mode Demo - Linux Credentials
+      - RH1 Image Mode Demo - Container Registry Credentials
+      - RH1 Image Mode Demo - Redhat Registry Credentials
+    aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
+    aap2_template_project: RH1 Image Mode Demo
+    # ------------------------------------
+
+aap2_workflows:
+  - aap2_workflow_name: "[RH1][Image Mode Demo] Build Image Mode application image"
+    aap2_workflow_project: RH1 Image Mode Demo
+    aap2_workflow_extra_vars:
+      image_tag: app
+      build_folder: app-repo
+      repo_url: "https://{{ gitea_server_hostname }}/{{ gitea_server_username }}/rh1-image-mode-container-app"
+    aap2_workflow_nodes:
+      - node_name: image-mode-build-scan
+        approval: false
+        nodes_on_success:
+          - image-mode-approve-scan
+        node_job_template: "[RH1][Image Mode Demo] Build and scan image"
+      - node_name: image-mode-approve-scan
+        approval: true
+        description: "Review the RHEL Image scan and proceed with push"
+        nodes_on_success:
+          - image-mode-push
+      - node_name: image-mode-push
+        approval: false
+        node_job_template: "[RH1][Image Mode Demo] Push image"
+
+  - aap2_workflow_name: "[RH1][Image Mode Demo] Build Image Mode SOE Image"
+    aap2_workflow_project: RH1 Image Mode Demo
+    aap2_workflow_extra_vars:
+      image_tag: soe
+      build_folder: soe-repo
+      repo_url: "https://{{ gitea_server_hostname }}/{{ gitea_server_username }}/rh1-image-mode-soe"
+    aap2_workflow_nodes:
+      - node_name: image-mode-build-scan
+        approval: false
+        nodes_on_success:
+          - image-mode-approve-scan
+        node_job_template: "[RH1][Image Mode Demo] Build and scan image"
+      - node_name: image-mode-approve-scan
+        approval: true
+        description: "Review the RHEL Image scan and proceed with push"
+        nodes_on_success:
+          - image-mode-push
+      - node_name: image-mode-push
+        approval: false
+        node_job_template: "[RH1][Image Mode Demo] Push image"
+
+  - aap2_workflow_name: "[RH1][Image Mode Demo] Build Image Mode application ISO"
+    aap2_workflow_project: RH1 Image Mode Demo
+    aap2_workflow_extra_vars:
+      image_tag: app
+      build_folder: app-repo
+      repo_url: "{{ image_mode_application_repo }}"
+    aap2_workflow_nodes:
+      - node_name: image-mode-build-scan
+        approval: false
+        nodes_on_success:
+          - image-mode-approve-scan
+        node_job_template: "[RH1][Image Mode Demo] Build and scan image"
+      - node_name: image-mode-approve-scan
+        approval: true
+        description: "Review the RHEL Image scan and proceed with push"
+        nodes_on_success:
+          - image-mode-push
+      - node_name: image-mode-push
+        approval: false
+        node_job_template: "[RH1][Image Mode Demo] Push image"
+        nodes_on_success:
+          - image-mode-convert-iso
+      - node_name: image-mode-convert-iso
+        approval: false
+        node_job_template: "[RH1][Image Mode Demo] Build ISO Image"
+
+####### EDA CONTROLLER VARIABLES ########
+eda_projects:
+  - name: "RH1 Image Mode Demo Project"
+    git_url: "https://{{ gitea_server_hostname }}/{{ gitea_server_username }}/rh1-image-mode"
+    description: "Demo project to show RHEL Image mode in action"
+eda_credentials:
+  - name: AAP2 Credentials
+    username: "{{ aap2_controller_username }}"
+    password: "{{ aap2_controller_password }}"
+    host: "{{ aap2_controller_url }}"
+    credential_type: Red Hat Ansible Automation Platform
+eda_activations:
+  - name: github-webhook
+    rulebook: rulebook-github.yml
+    project_name: "RH1 Image Mode Demo Project"
+    decision_env: "Default Decision Environment"
+    credentials:
+      - "AAP2 Credentials"
