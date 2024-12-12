@@ -37,6 +37,7 @@
         status_code:
           - 200
           - 201
+          - 400
         body:
           name: "Gitea token"
           scopes:
@@ -61,6 +62,7 @@
         status_code:
           - 200
           - 201
+          - 400
         body:
           clone_addr: "{{ item.source }}"
           repo_name: "{{ item.dest }}"
@@ -85,6 +87,7 @@
         status_code:
           - 200
           - 201
+          - 400
         body:
           config:
             content_type: "json"
