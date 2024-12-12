@@ -79,7 +79,7 @@
 
     - name: RH1 Demo | Configure webhooks for repos
       ansible.builtin.uri:
-        url: "https://{{ gitea_server_hostname }}/api/v1/repos/{{ gitea_server_username }}/{{ item }}/hooks"
+        url: "https://{{ gitea_server_hostname }}:3000/api/v1/repos/{{ gitea_server_username }}/{{ item }}/hooks"
         headers:
           Authorization: Bearer {{ auth_token }}
         method: POST
