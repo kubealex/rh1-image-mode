@@ -17,15 +17,17 @@
   hosts: gitea
   vars_files:
     - demo-setup-vars.yml
-  roles:
-    - ansible-gitea-podman
+  # roles:
+  #   - ansible-gitea-podman
 
 - name: RH1 Demo | Configure Gitea instance
   hosts: localhost
+  vars_files:
+    - demo-setup-vars.yml
   tasks:
     - name: RH1 Demo | Get Gitea token
       ansible.builtin.uri:
-        url: "{{ gitea_server_hostname }}:3000/api/v1/users/{{ gitea_server_username }}/tokens"
+        url: "https://{{ gitea_server_hostname }}:3000/api/v1/users/{{ gitea_server_username }}/tokens"
         user: "{{ gitea_server_username }}"
         password: "{{ gitea_server_password }}"
         method: POST
@@ -49,7 +51,7 @@
 
     - name: RH1 Demo | Migrate Gitea repos
       ansible.builtin.uri:
-        url: "{{ gitea_server_hostname }}:3000/api/v1/repos/migrate"
+        url: "https://{{ gitea_server_hostname }}:3000/api/v1/repos/migrate"
         headers:
           Authorization: Bearer {{ auth_token }}
         method: POST
@@ -73,7 +75,7 @@
 
     - name: RH1 Demo | Configure webhooks for repos
       ansible.builtin.uri:
-        url: "{{ gitea_server_hostname }}/api/v1/repos/{{ gitea_server_username }}/{{ item }}/hooks"
+        url: "https://{{ gitea_server_hostname }}/api/v1/repos/{{ gitea_server_username }}/{{ item }}/hooks"
         headers:
           Authorization: Bearer {{ auth_token }}
         method: POST
