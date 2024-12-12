@@ -38,6 +38,7 @@
           - 200
           - 201
           - 400
+          - 409
         body:
           name: "Gitea token"
           scopes:
@@ -63,6 +64,7 @@
           - 200
           - 201
           - 400
+          - 409
         body:
           clone_addr: "{{ item.source }}"
           repo_name: "{{ item.dest }}"
@@ -88,6 +90,7 @@
           - 200
           - 201
           - 400
+          - 409
         body:
           config:
             content_type: "json"
