@@ -44,7 +44,7 @@ aap2_galaxy_credentials:
 
 aap2_projects:
   - name: "RH1 Image Mode Demo"
-    scm_url: "https://{{ gitea_server_hostname }}/{{ gitea_server_username }}/rh1-image-mode"
+    scm_url: "https://{{ gitea_server_hostname }}:3000/{{ gitea_server_username }}/rh1-image-mode"
     scm_branch: "main"
     default_ee: "Minimal execution environment"
     force_update: false
@@ -238,7 +238,7 @@ aap2_workflows:
     aap2_workflow_extra_vars:
       image_tag: app
       build_folder: app-repo
-      repo_url: "https://{{ gitea_server_hostname }}/{{ gitea_server_username }}/rh1-image-mode-container-app"
+      repo_url: "https://{{ gitea_server_hostname }}:3000/{{ gitea_server_username }}/rh1-image-mode-container-app"
     aap2_workflow_nodes:
       - node_name: image-mode-build-scan
         approval: false
@@ -259,7 +259,7 @@ aap2_workflows:
     aap2_workflow_extra_vars:
       image_tag: soe
       build_folder: soe-repo
-      repo_url: "https://{{ gitea_server_hostname }}/{{ gitea_server_username }}/rh1-image-mode-soe"
+      repo_url: "https://{{ gitea_server_hostname }}:3000/{{ gitea_server_username }}/rh1-image-mode-soe"
     aap2_workflow_nodes:
       - node_name: image-mode-build-scan
         approval: false
@@ -304,7 +304,7 @@ aap2_workflows:
 ####### EDA CONTROLLER VARIABLES ########
 eda_projects:
   - name: "RH1 Image Mode Demo Project"
-    git_url: "https://{{ gitea_server_hostname }}/{{ gitea_server_username }}/rh1-image-mode"
+    git_url: "https://{{ gitea_server_hostname }}:3000/{{ gitea_server_username }}/rh1-image-mode"
     description: "Demo project to show RHEL Image mode in action"
 eda_credentials:
   - name: AAP2 Credentials
