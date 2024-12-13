@@ -96,7 +96,7 @@ Run the following command to proceed:
 $ ansible-playbook demo-setup/configure-gitea-server.yml -i inventory
 ```
 
-The instance will be available at https://{{ gitea_server_hostname }}:3000
+The instance will be available at https://{{ gitea_server_hostname }}:{{ gitea_server_port | default('3000', true) }}
 
 ### Configure AAP
 
