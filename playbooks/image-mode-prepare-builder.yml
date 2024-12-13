@@ -18,8 +18,15 @@
         name: container-tools
         state: present
 
+    - name: Enable Linger for user
+      ansible.builtin.command:
+        argv:
+          - /usr/bin/loginctl
+          - enable-linger
+          - "{{ ansible_user }}"
+        creates: "/var/lib/systemd/linger/{{ ansible_user }}"
+
     - name: RH1 Demo | Enable Podman socket for image scanning
-      become: true
       ansible.builtin.systemd_service:
         name: podman.socket
         state: started
