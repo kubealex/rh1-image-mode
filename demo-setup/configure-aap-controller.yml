@@ -15,4 +15,3 @@
           GIT_SSL_NO_VERIFY: "true"
   roles:
     - role: role_aap_controller_setup
-

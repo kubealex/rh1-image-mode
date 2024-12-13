@@ -30,6 +30,7 @@
         name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}"
         build_args:
           force_rm: true
+          extra_args: "--build-arg REGISTRY_URL={{ rhel_image_mode_registry_url }} --build-arg REGISTRY_USER={{ rhel_image_mode_registry_username }}"
         path: "{{ workdir }}/{{ build_folder }}"
         pull: false
 
