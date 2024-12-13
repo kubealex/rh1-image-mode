@@ -18,31 +18,31 @@
         username: "{{ item.username }}"
         password: "{{ item.password }}"
       loop:
-        - registry: "{{ rhel_image_mode_registry_url }}"
-          username: "{{ rhel_image_mode_registry_username }}"
-          password: "{{ rhel_image_mode_registry_password }}"
+        - registry: "{{ gitea_server_url }}"
+          username: "{{ gitea_username }}"
+          password: "{{ gitea_password }}"
         - registry: "{{ redhat_registry_url }}"
           username: "{{ redhat_registry_username }}"
           password: "{{ redhat_registry_password }}"
 
     - name: RH1 Demo | Build RHEL Image
       containers.podman.podman_image:
-        name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}"
+        name: "{{ gitea_server_url }}/{{ gitea_username }}/rhel-image-mode-demo:{{ image_tag }}"
         build_args:
           force_rm: true
-          extra_args: "--build-arg REGISTRY_URL={{ rhel_image_mode_registry_url }} --build-arg REGISTRY_USER={{ rhel_image_mode_registry_username }}"
+          extra_args: "--build-arg REGISTRY_URL={{ gitea_server_url }} --build-arg REGISTRY_USER={{ gitea_username }}"
         path: "{{ workdir }}/{{ build_folder }}"
         pull: false
 
     - name: RH1 Demo | Tag Image
       containers.podman.podman_tag:
-        image: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}"
+        image: "{{ gitea_server_url }}/{{ gitea_username }}/rhel-image-mode-demo:{{ image_tag }}"
         target_names:
-          - "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}-{{ git_tag }}"
+          - "{{ gitea_server_url }}/{{ gitea_username }}/rhel-image-mode-demo:{{ image_tag }}-{{ git_tag }}"
 
     - name: RH1 Demo | Run Image Vulnerability Scan
       ansible.builtin.shell:
-        cmd: "trivy image --java-db-repository public.ecr.aws/aquasecurity/trivy-java-db --db-repository public.ecr.aws/aquasecurity/trivy-db --scanners vuln {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}"
+        cmd: "trivy image --java-db-repository public.ecr.aws/aquasecurity/trivy-java-db --db-repository public.ecr.aws/aquasecurity/trivy-db --scanners vuln {{ gitea_server_url }}/{{ gitea_username }}/rhel-image-mode-demo:{{ image_tag }}"
       register: image_scan
 
     - name: RH1 Demo | Print scan results

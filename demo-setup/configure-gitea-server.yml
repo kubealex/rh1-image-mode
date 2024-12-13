@@ -34,9 +34,9 @@
   tasks:
     - name: RH1 Demo | Get Gitea token
       ansible.builtin.uri:
-        url: "https://{{ gitea_server_hostname }}:{{ gitea_server_port | default('3000', true) }}/api/v1/users/{{ gitea_server_username }}/tokens"
-        user: "{{ gitea_server_username }}"
-        password: "{{ gitea_server_password }}"
+        url: "https://{{ gitea_server_hostname }}:{{ gitea_server_port | default('3000', true) }}/api/v1/users/{{ gitea_username }}/tokens"
+        user: "{{ gitea_username }}"
+        password: "{{ gitea_password }}"
         method: POST
         force_basic_auth: true
         follow_redirects: true
@@ -86,7 +86,7 @@
 
     - name: RH1 Demo | Configure webhooks for repos
       ansible.builtin.uri:
-        url: "https://{{ gitea_server_hostname }}:{{ gitea_server_port | default('3000', true) }}/api/v1/repos/{{ gitea_server_username }}/{{ item }}/hooks"
+        url: "https://{{ gitea_server_hostname }}:{{ gitea_server_port | default('3000', true) }}/api/v1/repos/{{ gitea_username }}/{{ item }}/hooks"
         headers:
           Authorization: Bearer {{ auth_token }}
         method: POST

@@ -8,7 +8,7 @@
 
     - name: RH1 Demo | Push RHEL Image
       containers.podman.podman_image:
-        name: "{{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo"
+        name: "{{ gitea_server_url }}/{{ gitea_username }}/rhel-image-mode-demo"
         path: "{{ workdir }}/{{ build_folder }}"
         push: true
         pull: false

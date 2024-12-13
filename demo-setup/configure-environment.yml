@@ -1,0 +1,21 @@
+---
+- name: RH1 Demo | Configure Gitea Server
+  import_playbook: configure-gitea-server.yml
+- name: RH1 Demo | Configure AAP Controller
+  import_playbook: configure-aap-controller.yml
+- name: RH1 Demo | Configure EDA Controller
+  import_playbook: configure-eda-controller.yml
+- name: RH1 Demo | Finalize Workshop Configuration
+  hosts: localhost
+  vars_files:
+    - demo-setup-vars.yml
+  tasks:
+    - name: RH1 Demo | Run Builder server config
+      ansible.controller.job_launch:
+        controller_host: "{{ aap2_controller_url }}"
+        controller_username: "{{ aap2_controller_username }}"
+        controller_password: "{{ aap2_controller_password }}"
+        validate_certs: "{{ aap2_controller_validate_ssl | default(false, true) }}"
+        organization: Default
+        job_template: "[RH1][Image Mode Demo] Prepare builder server"
+        wait: true

@@ -14,9 +14,9 @@
         username: "{{ item.username }}"
         password: "{{ item.password }}"
       loop:
-        - registry: "{{ rhel_image_mode_registry_url }}"
-          username: "{{ rhel_image_mode_registry_username }}"
-          password: "{{ rhel_image_mode_registry_password }}"
+        - registry: "{{ gitea_server_url }}"
+          username: "{{ gitea_username }}"
+          password: "{{ gitea_password }}"
         - registry: "{{ redhat_registry_url }}"
           username: "{{ redhat_registry_username }}"
           password: "{{ redhat_registry_password }}"
@@ -65,10 +65,10 @@
           mkdir -p /etc/containers/registries.conf.d/
           cat > /etc/containers/registries.conf.d/gitea-registry.conf << 'EOF'
           [[registry]]
-          location = "{{ rhel_image_mode_registry_url }}"
+          location = "{{ gitea_server_url }}"
           insecure = true
           EOF
-          bootc switch --mutate-in-place --transport registry {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}
+          bootc switch --mutate-in-place --transport registry {{ gitea_server_url }}/{{ gitea_username }}/rhel-image-mode-demo:{{ image_tag }}
           %end
           """
         dest: "{{ workdir }}/config.toml"
@@ -90,7 +90,7 @@
           - "/var/lib/containers/storage:/var/lib/containers/storage"
           - "{{ workdir }}/config.toml:/config.toml"
           - "{{ workdir }}/output:/output"
-        command: "--type iso --config /config.toml --tls-verify=false {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}"
+        command: "--type iso --config /config.toml --tls-verify=false {{ gitea_server_url }}/{{ gitea_username }}/rhel-image-mode-demo:{{ image_tag }}"
 
     - name: RH1 Demo | Wait for image to be generated. It can take a while.
       ansible.builtin.wait_for:

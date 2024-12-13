@@ -67,45 +67,31 @@ server_username: sysadmin
 server_password: redhat
 
 ### Custom Gitea settings for Git and Container registry hosting
-gitea_server_hostname: rhel9-server.rh-lab.labs
-gitea_server_username: gitea
-gitea_server_password: redhat
+gitea_username: gitea
+gitea_password: redhat
 ```
 
 It is pre-filled with the demo setup fields, it MUST be changed according to your own environment.
 
-### Configure Gitea Instance
+### Configure the workshop
 
 Running the following command will end up creating:
 
 - Containerized Gitea instance with self-signed certs
 - Clone of the demo repositories made available in Gitea
 - Webhooks configured on Gitea
+- AAP2 Configuration
+- AAP2 Resources (Projects, inventories, credentials)
+- Finalize the server configuration with certificates, builder packages and services, image scanning, etc.
 
 Run the following command to proceed:
 
 ```
-$ ansible-playbook demo-setup/configure-gitea-server.yml -i inventory
+ansible-playbook -i demo-setup/inventory demo-setup/configure-environment.yml
 ```
 
-The instance will be available at https://{{ gitea_server_hostname }}:3000
-
-### Configure AAP
-
-To configure AAP and all related resources (Projects, inventories, etc) simply run:
-
-```
-$ ansible-playbook demo-setup/configure-aap.yml -i inventory
-```
-
-### Configure the build server
-
-Once the AAP2 Configuration is done, log-in to the Automation Controller and run the template **[RH1][Image Mode Demo] Prepare builder server** to install required tools on the server for:
-
-- Image building
-- Image scanning
-- Repo cloning
-- Certificates setup
+> [!TIP]
+> The gitea instance will be available at https://{{ gitea_server_hostname }}:3000
 
 ## Demo use cases
 
@@ -141,7 +127,7 @@ We are now ready to generate the ISO image that we need to deploy.
 > It is important that the tag name contains the word *iso* as the Rulebook Activation in EDA performs a check on the tag name to distinguish between the diffrent kind of workflows o run.
 
 > [!CAUTION]
-> Replace **YOUR_REPOSITORY_URL** with the value of *rhel_image_mode_registry_url* variable.
+> Replace **YOUR_REPOSITORY_URL** with the value of *gitea_server_hostname* variable.
 
 In GitHub or with your CLI, create a tag (i.e. v1.0-iso) and this will trigger an EDA action that runs the **[RH1][Image Mode Demo] Build Image Mode application ISO** workflow that will:
 
@@ -196,7 +182,7 @@ Go to the *container-app* repository you forked before (https://github.com/YOURG
 As you can see, our developers bumped the installed JDK to version 17 and we want to propagate the change to the installed systems.
 
 > [!CAUTION]
-> Replace **YOUR_REPOSITORY_URL** with the value of *rhel_image_mode_registry_url* variable
+> Replace **YOUR_REPOSITORY_URL** with the value of *gitea_server_hostname* variable
 > Copy the content of the *Containerfile-app17* into the *Containerfile* and push the changes
 
 In GitHub or with your CLI, create a tag (i.e. v1.1-j17) and this will trigger an EDA action that runs the **[RH1][Image Mode Demo] Build Image Mode application image** workflow that will:
