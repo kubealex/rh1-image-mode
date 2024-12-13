@@ -41,7 +41,8 @@ aap2_projects:
     scm_url: "https://{{ gitea_server_hostname }}:{{ gitea_server_port | default('3000', true) }}/{{ gitea_server_username }}/rh1-image-mode"
     scm_branch: "main"
     default_ee: "Minimal execution environment"
-    force_update: false
+    force_update: true
+    update_on_launch: false
   # ------------------------------------
   # ------------------------------------
 
@@ -201,16 +202,6 @@ aap2_templates:
       - RH1 Image Mode Demo - Linux Credentials
     aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
     aap2_template_project: RH1 Image Mode Demo
-    # ------------------------------------
-  # - aap2_template_name: "[RH1][Image Mode Demo] Configure Gitea Server"
-  #   aap2_template_playbook: playbooks/image-mode-configure-gitea.yml
-  #   aap2_template_credentials:
-  #     - RH1 Image Mode Demo - Linux Credentials
-  #     - RH1 Image Mode Demo - Gitea Credentials
-  #   aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
-  #   aap2_template_project: RH1 Image Mode Demo
-  #   aap2_template_extra_vars:
-  #     eda_activation_url: "{{ eda_controller_url }}:5010"
     # ------------------------------------
   - aap2_template_name: "[RH1][Image Mode Demo] Build ISO Image"
     aap2_template_playbook: playbooks/image-mode-build-iso.yml

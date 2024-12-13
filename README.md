@@ -19,9 +19,12 @@ This repo is a working asset to deliver and replicate the RHEL Image mode Sessio
 The folder [demo-setup](./demo-setup/) contains all required bits to configure all templates, credentials and inventories as well as rulebook activations on EDA that are needed for the demo.
 
 ### Prerequisites
+
+- 1x VM for Red Hat Ansible Automation Platform
+- 1x VM for Gitea, httpd and the image building services
 - AAP 2.4+ installed and exposing EDA and Controller APIs
-- A container registry available (in this example we are using [Gitea](https://docs.gitea.com/usage/packages/container) but you can use also local Quay or simple [docker registry](https://www.redhat.com/en/blog/simple-container-registry))
-- [GitHub](https://github.com) Account to fork repositories and make changes
+- Retrieve the Red Hat Automation Hub URLs and token from [console.redhat.com](https://console.redhat.com/ansible/automation-hub/token), as you will need them to fill the **automation_hub_** variables below.
+- A Red Hat Account Username and password or [Service Account for accessing registry.redhat.io](https://access.redhat.com/RegistryAuthentication#registry-service-accounts-for-shared-environments-4) as you will need them to fill the **redhat_registry_** variables below.
 
 ### Lab deployment
 
@@ -31,23 +34,13 @@ Install the required ansible collections by running:
 $ ansible-galaxy install -r demo-setup/requirements.yml --force
 ```
 
-Retrieve the Red Hat Automation Hub URLs and token from [console.redhat.com](https://console.redhat.com/ansible/automation-hub/token), as you will need them to fill the **automation_hub_** variables below.
-
-Add Red Hat Automation Hub as primary content resource as shown [here](https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/1.2/html/getting_started_with_red_hat_ansible_automation_hub/proc-configure-automation-hub-server#proc-configure-automation-hub-server)
-and then install the other required collections:
-
 ### demo-setup-vars.yml
 
 This file contains all required variables to populate projects, credentials and templates, edit the values according to your environment:
 
 ``` yaml
-### Container registry credentials where you will push images
-rhel_image_mode_registry_url:
-rhel_image_mode_registry_username:
-rhel_image_mode_registry_password:
-
 ### Red Hat Container Registry authentication (use Red Hat ID Username/Password or service account)
-redhat_registry_url:
+redhat_registry_url: registry.redhat.io
 redhat_registry_username:
 redhat_registry_password:
 
@@ -64,20 +57,19 @@ eda_controller_password: redhat
 ### URL for Red Hat Automation Hub
 automation_hub_url: https://console.redhat.com/api/automation-hub/content/published/
 automation_hub_auth_url: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
-authomation_hub_token:
+automation_hub_token:
 
-### Hostname/IP of the webserver and build server
-webserver_hostname:
-build_server_hostname:
-gitea_server_hostname:
+### Hostname/IP of the server hosting builds, webserver and Gitea instance
+server_hostname: rhel9-server.rh-lab.labs
 
-### Credentials for hosts
-inventory_servers_username:
-inventory_servers_password:
+### Credentials for the server
+server_username: sysadmin
+server_password: redhat
 
-### Custom Gitea setup
-gitea_server_username:
-gitea_server_password:
+### Custom Gitea settings for Git and Container registry hosting
+gitea_server_hostname: rhel9-server.rh-lab.labs
+gitea_server_username: gitea
+gitea_server_password: redhat
 ```
 
 It is pre-filled with the demo setup fields, it MUST be changed according to your own environment.
@@ -96,7 +88,7 @@ Run the following command to proceed:
 $ ansible-playbook demo-setup/configure-gitea-server.yml -i inventory
 ```
 
-The instance will be available at https://{{ gitea_server_hostname }}:{{ gitea_server_port | default('3000', true) }}
+The instance will be available at https://{{ gitea_server_hostname }}:3000
 
 ### Configure AAP
 
@@ -105,6 +97,15 @@ To configure AAP and all related resources (Projects, inventories, etc) simply r
 ```
 $ ansible-playbook demo-setup/configure-aap.yml -i inventory
 ```
+
+### Configure the build server
+
+Once the AAP2 Configuration is done, log-in to the Automation Controller and run the template **[RH1][Image Mode Demo] Prepare builder server** to install required tools on the server for:
+
+- Image building
+- Image scanning
+- Repo cloning
+- Certificates setup
 
 ## Demo use cases
 

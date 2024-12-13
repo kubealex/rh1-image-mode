@@ -17,6 +17,13 @@
   hosts: gitea
   vars_files:
     - demo-setup-vars.yml
+  pre_tasks:
+    - name: RH1 Demo | Esure Podman is installed
+      become: true
+      ansible.builtin.dnf:
+        name: podman
+        state: present
+
   roles:
     - ansible-gitea-podman
 
