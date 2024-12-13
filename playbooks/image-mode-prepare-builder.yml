@@ -18,6 +18,14 @@
         name: container-tools
         state: present
 
+    - name: RH1 Demo | Enable Podman socket for image scanning
+      become: true
+      ansible.builtin.systemd_service:
+        name: podman.socket
+        state: present
+        enabled: true
+        scope: user
+
     - name: RH1 Demo | Set-up trivy scanning
       become: true
       block:
