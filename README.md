@@ -101,7 +101,7 @@ We decided to use RHEL Image mode to streamline the OS configuration and build/s
 ### Creating a SOE image
 
 In the first use case we will create a base image that we will use for the application image build.
-Go to the SOE repository you forked before (https://github.com/YOURGITHUBUSERNAME/rh1-image-mode-soe) and review the Containerfile.
+Go to the SOE repository you forked before (https://{{ server_hostname }}:3000/{{ gitea_username }}/rh1-image-mode-soe) and review the Containerfile.
 
 As you can see it has a limited set of informations, that are considered enough from our infrastructure team to provide a base image for developers.
 
@@ -117,7 +117,7 @@ In GitHub or with your CLI, create a tag (i.e. v1.0-soe) and this will trigger a
 
 Now that we built the SOE image, we want to provide our developers with the latest version of it to embed their application.
 
-Go to the *container-app* repository you forked before (https://github.com/YOURGITHUBUSERNAME/rh1-image-mode-container-app.git) and review the Containerfile.
+Go to the *container-app* repository you forked before (https://{{ server_hostname }}:3000/{{ gitea_username }}/rh1-image-mode-container-app.git) and review the Containerfile.
 
 As you can see, it installs Java 11, the application bits, a DB and populates the DB with some initial data that is needed by the application.
 
@@ -125,9 +125,6 @@ We are now ready to generate the ISO image that we need to deploy.
 
 > [!WARNING]
 > It is important that the tag name contains the word *iso* as the Rulebook Activation in EDA performs a check on the tag name to distinguish between the diffrent kind of workflows o run.
-
-> [!CAUTION]
-> Replace **YOUR_REPOSITORY_URL** with the value of *server_hostname* variable.
 
 In GitHub or with your CLI, create a tag (i.e. v1.0-iso) and this will trigger an EDA action that runs the **[RH1][Image Mode Demo] Build Image Mode application ISO** workflow that will:
 
@@ -177,12 +174,11 @@ sudo bootc status
 
 Our developers updated the application to work with Java 17, so they are planning to release an update to the image to match the new version.
 
-Go to the *container-app* repository you forked before (https://github.com/YOURGITHUBUSERNAME/rh1-image-mode-container-app.git) and review the *Containerfile-app17* file that contains the modifications.
+Go to the *container-app* repository you forked before (https://{{ server_hostname }}:3000/{{ gitea_username }}/rh1-image-mode-container-app.git) and review the *Containerfile-app17* file that contains the modifications.
 
 As you can see, our developers bumped the installed JDK to version 17 and we want to propagate the change to the installed systems.
 
 > [!CAUTION]
-> Replace **YOUR_REPOSITORY_URL** with the value of *server_hostname* variable
 > Copy the content of the *Containerfile-app17* into the *Containerfile* and push the changes
 
 In GitHub or with your CLI, create a tag (i.e. v1.1-j17) and this will trigger an EDA action that runs the **[RH1][Image Mode Demo] Build Image Mode application image** workflow that will:
