@@ -8,7 +8,7 @@
         port: 5010
   rules:
     - name: RH1 Demo | Webhook | React to new tag creation - Application ISO
-      condition: event.meta.headers["X-Github-Event"] == 'create' and event.payload.repository.name == 'rh1-image-mode-container-app' and event.payload.ref is search("iso", ignorecase=true)
+      condition: (event.meta.headers["X-Github-Event"] or event.meta.headers["X-Gitea-Event"] == 'create') and event.payload.repository.name == 'rh1-image-mode-container-app' and event.payload.ref is search("iso", ignorecase=true)
       actions:
         - debug:
         - run_workflow_template:
@@ -19,7 +19,7 @@
                 git_tag: "{{ event.payload.ref }}"
 
     - name: RH1 Demo | Webhook | React to new tag creation - Application
-      condition: event.meta.headers["X-Github-Event"] == 'create' and event.payload.repository.name == 'rh1-image-mode-container-app'
+      condition: (event.meta.headers["X-Github-Event"] or event.meta.headers["X-Gitea-Event"] == 'create') and event.payload.repository.name == 'rh1-image-mode-container-app'
       actions:
         - debug:
         - run_workflow_template:
@@ -30,7 +30,7 @@
                 git_tag: "{{ event.payload.ref }}"
 
     - name: RH1 Demo | Webhook | React to new tag creation - SOE
-      condition: event.meta.headers["X-Github-Event"] == 'create' and event.payload.repository.name == 'rh1-image-mode-soe'
+      condition: (event.meta.headers["X-Github-Event"] or event.meta.headers["X-Gitea-Event"] == 'create') and event.payload.repository.name == 'rh1-image-mode-soe'
       actions:
         - debug:
         - run_workflow_template:
