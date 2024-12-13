@@ -91,7 +91,7 @@ ansible-playbook -i demo-setup/inventory demo-setup/configure-environment.yml
 ```
 
 > [!TIP]
-> The gitea instance will be available at https://{{ gitea_server_hostname }}:3000
+> The gitea instance will be available at https://{{ server_hostname }}:3000
 
 ## Demo use cases
 
@@ -127,7 +127,7 @@ We are now ready to generate the ISO image that we need to deploy.
 > It is important that the tag name contains the word *iso* as the Rulebook Activation in EDA performs a check on the tag name to distinguish between the diffrent kind of workflows o run.
 
 > [!CAUTION]
-> Replace **YOUR_REPOSITORY_URL** with the value of *gitea_server_hostname* variable.
+> Replace **YOUR_REPOSITORY_URL** with the value of *server_hostname* variable.
 
 In GitHub or with your CLI, create a tag (i.e. v1.0-iso) and this will trigger an EDA action that runs the **[RH1][Image Mode Demo] Build Image Mode application ISO** workflow that will:
 
@@ -182,7 +182,7 @@ Go to the *container-app* repository you forked before (https://github.com/YOURG
 As you can see, our developers bumped the installed JDK to version 17 and we want to propagate the change to the installed systems.
 
 > [!CAUTION]
-> Replace **YOUR_REPOSITORY_URL** with the value of *gitea_server_hostname* variable
+> Replace **YOUR_REPOSITORY_URL** with the value of *server_hostname* variable
 > Copy the content of the *Containerfile-app17* into the *Containerfile* and push the changes
 
 In GitHub or with your CLI, create a tag (i.e. v1.1-j17) and this will trigger an EDA action that runs the **[RH1][Image Mode Demo] Build Image Mode application image** workflow that will:

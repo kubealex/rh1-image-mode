@@ -49,7 +49,7 @@
   tasks:
     - name: RH1 Demo | Get Gitea token
       ansible.builtin.uri:
-        url: "https://{{ gitea_server_hostname }}:{{ gitea_server_port | default('3000', true) }}/api/v1/users/{{ gitea_username }}/tokens"
+        url: "https://{{ server_hostname }}:{{ gitea_server_port | default('3000', true) }}/api/v1/users/{{ gitea_username }}/tokens"
         user: "{{ gitea_username }}"
         password: "{{ gitea_password }}"
         method: POST
@@ -75,7 +75,7 @@
 
     - name: RH1 Demo | Migrate Gitea repos
       ansible.builtin.uri:
-        url: "https://{{ gitea_server_hostname }}:{{ gitea_server_port | default('3000', true) }}/api/v1/repos/migrate"
+        url: "https://{{ server_hostname }}:{{ gitea_server_port | default('3000', true) }}/api/v1/repos/migrate"
         headers:
           Authorization: Bearer {{ auth_token }}
         method: POST
@@ -101,7 +101,7 @@
 
     - name: RH1 Demo | Configure webhooks for repos
       ansible.builtin.uri:
-        url: "https://{{ gitea_server_hostname }}:{{ gitea_server_port | default('3000', true) }}/api/v1/repos/{{ gitea_username }}/{{ item }}/hooks"
+        url: "https://{{ server_hostname }}:{{ gitea_server_port | default('3000', true) }}/api/v1/repos/{{ gitea_username }}/{{ item }}/hooks"
         headers:
           Authorization: Bearer {{ auth_token }}
         method: POST
