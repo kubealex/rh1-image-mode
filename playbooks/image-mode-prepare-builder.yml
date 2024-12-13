@@ -51,7 +51,7 @@
       become: true
       ansible.builtin.copy:
         content: "{{ _gitea_ca.cert }}"
-        dest: /etc/pki/ca-trust/source/anchors/gitea-ca.crt
+        dest: /etc/pki/ca-trust/source/anchors/gitea-ca.pem
         mode: "0755"
 
     - name: RH1 Demo | Trust CA Cert for Gitea
