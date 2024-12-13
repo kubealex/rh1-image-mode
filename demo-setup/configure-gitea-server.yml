@@ -6,9 +6,9 @@
   tasks:
     - name: RH1 Demo | Add host to in-memory inventory
       ansible.builtin.add_host:
-        name: "{{ gitea_server_hostname }}"
-        ansible_user: "{{ inventory_servers_username }}"
-        ansible_password: "{{ inventory_servers_password }}"
+        name: "{{ server_hostname }}"
+        ansible_user: "{{ server_username }}"
+        ansible_password: "{{ server_password }}"
         ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
         groups:
           - "gitea"
