@@ -1,20 +1,15 @@
-### Container registry credentials where you will push images
-rhel_image_mode_registry_url: aap.example.com:3000
-rhel_image_mode_registry_username: lab-user
-rhel_image_mode_registry_password: redhat
-
 ### Red Hat Container Registry authentication (use Red Hat ID Username/Password or service account)
-redhat_registry_url: registry.redhat.com
+redhat_registry_url: registry.redhat.io
 redhat_registry_username:
 redhat_registry_password:
 
 ### URL and creds for AAP2 Controller
-aap2_controller_url: https://aap.example.com:8443
+aap2_controller_url: https://aap.rh-lab.labs:8443
 aap2_controller_username: admin
 aap2_controller_password: redhat
 
 ### URL and creds for AAP2 EDA Controller
-eda_controller_url: https://aap.example.com:8445
+eda_controller_url: https://aap.rh-lab.labs:8445
 eda_controller_username: admin
 eda_controller_password: redhat
 
@@ -23,17 +18,16 @@ automation_hub_url: https://console.redhat.com/api/automation-hub/content/publis
 automation_hub_auth_url: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
 automation_hub_token:
 
-### Hostname/IP of the webserver and build server
-webserver_hostname: aap.example.com
-build_server_hostname: aap.example.com
-gitea_server_hostname: aap.example.com
+### Hostname/IP of the server hosting builds, webserver and Gitea instance
+server_hostname: rhel9-server.rh-lab.labs
 
-### Credentials for hosts
-inventory_servers_username: lab-user
-inventory_servers_password: redhat
+### Credentials for the server
+server_username: sysadmin
+server_password: redhat
 
-### Custom Gitea setup
-gitea_server_username: lab-user
+### Custom Gitea settings for Git and Container registry hosting
+gitea_server_hostname: rhel9-server.rh-lab.labs
+gitea_server_username: gitea
 gitea_server_password: redhat
 
 aap2_galaxy_credentials:
@@ -44,7 +38,7 @@ aap2_galaxy_credentials:
 
 aap2_projects:
   - name: "RH1 Image Mode Demo"
-    scm_url: "https://{{ gitea_server_hostname }}:3000/{{ gitea_server_username }}/rh1-image-mode"
+    scm_url: "https://{{ gitea_server_hostname }}:{{ gitea_server_port | default('3000', true) }}/{{ gitea_server_username }}/rh1-image-mode"
     scm_branch: "main"
     default_ee: "Minimal execution environment"
     force_update: false
@@ -53,8 +47,8 @@ aap2_projects:
 
 aap2_machine_credentials:
   - name: "RH1 Image Mode Demo - Linux Credentials"
-    username: "{{ inventory_servers_username }}"
-    password: "{{ inventory_servers_password }}"
+    username: "{{ server_username }}"
+    password: "{{ server_password }}"
   # ------------------------------------
   # ------------------------------------
 
@@ -85,7 +79,7 @@ aap2_custom_credentials:
         gitea_server_username: !unsafe "{{ gitea_user }}"
         gitea_server_password: !unsafe "{{ gitea_pwd }}"
     credential_inputs:
-      gitea_url: "{{ gitea_server_hostname }}"
+      gitea_url: "{{ gitea_server_hostname }}:{{ gitea_server_port | default('3000', true) }}"
       gitea_user: "{{ gitea_server_username }}"
       gitea_pwd: "{{ gitea_server_password }}"
 
@@ -115,9 +109,9 @@ aap2_custom_credentials:
         rhel_image_mode_registry_username: !unsafe "{{ image_registry_user }}"
         rhel_image_mode_registry_password: !unsafe "{{ image_registry_pwd }}"
     credential_inputs:
-      image_registry_url: "{{ rhel_image_mode_registry_url }}"
-      image_registry_user: "{{ rhel_image_mode_registry_username }}"
-      image_registry_pwd: "{{ rhel_image_mode_registry_password }}"
+      image_registry_url: "{{ gitea_server_hostname }}:{{ gitea_server_port | default('3000', true) }}"
+      image_registry_user: "{{ gitea_server_username }}"
+      image_registry_pwd: "{{ gitea_server_password }}"
   # ------------------------------------
   - credential_type: RH1 Image Mode Demo - Redhat Registry Auth
     name: RH1 Image Mode Demo - Redhat Registry Credentials
@@ -156,26 +150,22 @@ aap2_inventories:
   # ------------------------------------
 
 aap2_inventory_static_hosts:
-  - name: "{{ build_server_hostname }}"
-    inventory: RH1 Image Mode Demo - SCM Inventory
-  - name: "{{ webserver_hostname }}"
-    inventory: RH1 Image Mode Demo - SCM Inventory
-  - name: "{{ gitea_server_hostname }}"
+  - name: "{{ server_hostname }}"
     inventory: RH1 Image Mode Demo - SCM Inventory
 
 aap2_inventory_static_groups:
   - name: build_host
     inventory: RH1 Image Mode Demo - SCM Inventory
     hosts:
-      - "{{ build_server_hostname }}"
+      - "{{ server_hostname }}"
   - name: webserver
     inventory: RH1 Image Mode Demo - SCM Inventory
     hosts:
-      - "{{ webserver_hostname }}"
+      - "{{ server_hostname }}"
   - name: gitea
     inventory: RH1 Image Mode Demo - SCM Inventory
     hosts:
-      - "{{ gitea_server_hostname }}"
+      - "{{ server_hostname }}"
 
 # aap2_inventory_sources:
 #   - aap2_inventory_source_name: RH1 Image Mode Demo - SCM Inventory Source
@@ -238,7 +228,7 @@ aap2_workflows:
     aap2_workflow_extra_vars:
       image_tag: app
       build_folder: app-repo
-      repo_url: "https://{{ gitea_server_hostname }}:3000/{{ gitea_server_username }}/rh1-image-mode-container-app"
+      repo_url: "https://{{ gitea_server_hostname }}:{{ gitea_server_port | default('3000', true) }}/{{ gitea_server_username }}/rh1-image-mode-container-app"
     aap2_workflow_nodes:
       - node_name: image-mode-build-scan
         approval: false
@@ -259,7 +249,7 @@ aap2_workflows:
     aap2_workflow_extra_vars:
       image_tag: soe
       build_folder: soe-repo
-      repo_url: "https://{{ gitea_server_hostname }}:3000/{{ gitea_server_username }}/rh1-image-mode-soe"
+      repo_url: "https://{{ gitea_server_hostname }}:{{ gitea_server_port | default('3000', true) }}/{{ gitea_server_username }}/rh1-image-mode-soe"
     aap2_workflow_nodes:
       - node_name: image-mode-build-scan
         approval: false
@@ -280,7 +270,7 @@ aap2_workflows:
     aap2_workflow_extra_vars:
       image_tag: app
       build_folder: app-repo
-      repo_url: "https://{{ gitea_server_hostname }}:3000/{{ gitea_server_username }}/rh1-image-mode-container-app"
+      repo_url: "https://{{ gitea_server_hostname }}:{{ gitea_server_port | default('3000', true) }}/{{ gitea_server_username }}/rh1-image-mode-container-app"
     aap2_workflow_nodes:
       - node_name: image-mode-build-scan
         approval: false
@@ -304,7 +294,7 @@ aap2_workflows:
 ####### EDA CONTROLLER VARIABLES ########
 eda_projects:
   - name: "RH1 Image Mode Demo Project"
-    git_url: "https://{{ gitea_server_hostname }}:3000/{{ gitea_server_username }}/rh1-image-mode"
+    git_url: "https://{{ gitea_server_hostname }}:{{ gitea_server_port | default('3000', true) }}/{{ gitea_server_username }}/rh1-image-mode"
     description: "Demo project to show RHEL Image mode in action"
 eda_credentials:
   - name: AAP2 Credentials
