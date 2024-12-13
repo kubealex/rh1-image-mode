@@ -45,6 +45,7 @@
         host: rhel9-server.rh-lab.labs
         port: 3000
       register: _gitea_ca
+      delegate_to: localhost
 
     - name: RH1 Demo | Store CA Cert in trust
       become: true
