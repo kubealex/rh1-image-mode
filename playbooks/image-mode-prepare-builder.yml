@@ -23,7 +23,7 @@
       block:
         - name: RH1 Demo | Add trivy repo
           ansible.builtin.yum_repository:
-            name: Trivy_repository
+            name: trivy_repository
             baseurl: https://aquasecurity.github.io/trivy-repo/rpm/releases/$releasever/$basearch/
             gpgcheck: false
             enabled: true
