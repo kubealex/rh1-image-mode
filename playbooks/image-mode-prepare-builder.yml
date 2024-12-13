@@ -23,7 +23,7 @@
       block:
         - name: RH1 Demo | Add trivy repo
           ansible.builtin.yum_repository:
-            name: Trivy repository
+            name: Trivy_repository
             baseurl: https://aquasecurity.github.io/trivy-repo/rpm/releases/$releasever/$basearch/
             gpgcheck: false
             enabled: true
@@ -39,6 +39,24 @@
         path: "{{ workdir }}/output"
         state: directory
         mode: "0775"
+
+    - name: RH1 Demo | Retrieve CA Cert for Gitea
+      community.crypto.get_certificate:
+        host: rhel9-server.rh-lab.labs
+        port: 3000
+      register: _gitea_ca
+
+    - name: RH1 Demo | Store CA Cert in trust
+      become: true
+      ansible.builtin.copy:
+        content: "{{ _gitea_ca.cert }}"
+        dest: /etc/pki/ca-trust/source/anchors/gitea-ca.crt
+        mode: "0755"
+
+    - name: RH1 Demo | Trust CA Cert for Gitea
+      become: true
+      ansible.builtin.shell:
+        cmd: update-ca-trust
 
 - name: RH1 Demo | Build RHEL Image Mode container
   hosts: webserver

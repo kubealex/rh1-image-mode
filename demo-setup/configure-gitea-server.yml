@@ -7,8 +7,8 @@
     - name: RH1 Demo | Add host to in-memory inventory
       ansible.builtin.add_host:
         name: "{{ gitea_server_hostname }}"
-        ansible_user: "{{ gitea_server_username }}"
-        ansible_password: "{{ gitea_server_password }}"
+        ansible_user: "{{ inventory_servers_username }}"
+        ansible_password: "{{ inventory_servers_password }}"
         ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
         groups:
           - "gitea"
@@ -17,8 +17,8 @@
   hosts: gitea
   vars_files:
     - demo-setup-vars.yml
-  # roles:
-  #   - ansible-gitea-podman
+  roles:
+    - ansible-gitea-podman
 
 - name: RH1 Demo | Configure Gitea instance
   hosts: localhost
@@ -92,9 +92,10 @@
           - 400
           - 409
         body:
+          active: true
           config:
             content_type: "json"
-            url: "{{ eda_controller_url | regex_replace(':[0-9]+', '') }}:5010"
+            url: "{{ eda_controller_url | regex_replace(':[0-9]+', '') | regex_replace('https', 'http') }}:5010"
             http_method: POST
           events:
             - create

@@ -62,6 +62,12 @@
           timezone Europe/Rome
           rootpw redhat
           %post
+          mkdir -p /etc/containers/registries.conf.d/
+          cat > /etc/containers/registries.conf.d/gitea-registry.conf << 'EOF'
+          [[registry]]
+          location = "{{ rhel_image_mode_registry_url }}"
+          insecure = true
+          EOF
           bootc switch --mutate-in-place --transport registry {{ rhel_image_mode_registry_url }}/{{ rhel_image_mode_registry_username }}/rhel-image-mode-demo:{{ image_tag }}
           %end
           """

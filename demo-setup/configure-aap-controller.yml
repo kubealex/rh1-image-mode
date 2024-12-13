@@ -3,6 +3,16 @@
   hosts: localhost
   vars_files:
     - demo-setup-vars.yml
+  pre_tasks:
+    - name: Configure SSL Verification for Git projects
+      ansible.controller.settings:
+        controller_host: "{{ aap2_controller_url }}"
+        controller_username: "{{ aap2_controller_username }}"
+        controller_password: "{{ aap2_controller_password }}"
+        validate_certs: "{{ aap2_controller_validate_ssl | default(false, true) }}"
+        name: AWX_TASK_ENV
+        value:
+          GIT_SSL_NO_VERIFY: "true"
   roles:
     - role: role_aap_controller_setup
 
