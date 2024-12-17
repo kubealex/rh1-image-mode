@@ -28,6 +28,8 @@ The folder [demo-setup](./demo-setup/) contains all required bits to configure a
 
 ### Lab deployment
 
+The repo comes with a preconfigured [ansible.cfg](./ansible.cfg) file to retrieve the requirements. Please replace <YOURTOKENHERE> with the Red Hat Automation Hub Token in the prerequisites.
+
 Install the required ansible collections by running:
 
 ```
