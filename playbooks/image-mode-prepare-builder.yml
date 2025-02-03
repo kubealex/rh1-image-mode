@@ -42,7 +42,7 @@
 
     - name: RH1 Demo | Retrieve CA Cert for Gitea
       community.crypto.get_certificate:
-        host: rhel9-server.rh-lab.labs
+        host: "{{ server_hostname }}"
         port: "{{ gitea_server_port | default('3000', true) }}"
       register: _gitea_ca
       delegate_to: localhost

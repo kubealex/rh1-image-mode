@@ -1,7 +1,7 @@
 ### Red Hat Container Registry authentication (use Red Hat ID Username/Password or service account)
-redhat_registry_url: registry.redhat.io
-redhat_registry_username:
-redhat_registry_password:
+redhat_registry_url: 
+redhat_registry_username: 
+redhat_registry_password: 
 
 ### URL and creds for AAP2 Controller
 aap2_controller_url: https://aap.rh-lab.labs:8443
@@ -16,10 +16,10 @@ eda_controller_password: redhat
 ### URL for Red Hat Automation Hub
 automation_hub_url: https://console.redhat.com/api/automation-hub/content/published/
 automation_hub_auth_url: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
-automation_hub_token:
+automation_hub_token: 
 
 ### Hostname/IP of the server hosting builds, webserver and Gitea instance
-server_hostname: rhel9-server.rh-lab.labs
+server_hostname: rhel-bootc.rh-lab.labs
 
 ### Credentials for the server
 server_username: sysadmin
@@ -28,6 +28,11 @@ server_password: redhat
 ### Custom Gitea settings for Git and Container registry hosting
 gitea_username: gitea
 gitea_password: redhat
+
+### Custom registry if not using Gitea integrated registry - Leave empty to use Gitea credentials
+custom_registry_url: 
+custom_registry_username: 
+custom_registry_password: 
 
 # -------------------------------------------------------------------------------------------------------------
 # ------------------------------------DO NOT EDIT ANYTHING BELOW THIS LINE!------------------------------------
@@ -56,36 +61,6 @@ aap2_machine_credentials:
   # ------------------------------------
 
 aap2_custom_credentials:
-  - credential_type: RH1 Image Mode Demo - Gitea Auth
-    name: RH1 Image Mode Demo - Gitea Credentials
-    credential_type_inputs:
-      fields:
-        - id: gitea_url
-          type: string
-          label: "Gitea URL"
-          secret: false
-        - id: gitea_user
-          type: string
-          label: "Gitea username"
-          secret: false
-        - id: gitea_pwd
-          type: string
-          label: "Gitea password"
-          secret: true
-      required:
-        - gitea_url
-        - gitea_user
-        - gitea_pwd
-    credential_type_injectors:
-      extra_vars:
-        gitea_server_url: !unsafe "{{ gitea_url }}"
-        gitea_username: !unsafe "{{ gitea_user }}"
-        gitea_password: !unsafe "{{ gitea_pwd }}"
-    credential_inputs:
-      gitea_url: "{{ server_hostname }}:{{ gitea_server_port | default('3000', true) }}"
-      gitea_user: "{{ gitea_username }}"
-      gitea_pwd: "{{ gitea_password }}"
-
   # ------------------------------------
   - credential_type: RH1 Image Mode Demo - Redhat Registry Auth
     name: RH1 Image Mode Demo - Redhat Registry Credentials
@@ -116,6 +91,36 @@ aap2_custom_credentials:
       image_registry_url: "{{ redhat_registry_url }}"
       image_registry_user: "{{ redhat_registry_username }}"
       image_registry_pwd: "{{ redhat_registry_password }}"
+  # ------------------------------------
+  - credential_type: RH1 Image Mode Demo - Custom Registry Auth
+    name: RH1 Image Mode Demo - Custom Registry Credentials
+    credential_type_inputs:
+      fields:
+        - id: custom_registry_url
+          type: string
+          label: "Image Registry URL"
+          secret: false
+        - id: custom_registry_user
+          type: string
+          label: "Image Registry username"
+          secret: false
+        - id: custom_registry_pwd
+          type: string
+          label: "Image Registry password"
+          secret: true
+      required:
+        - custom_registry_url
+        - custom_registry_user
+        - custom_registry_pwd
+    credential_type_injectors:
+      extra_vars:
+        custom_registry_url: !unsafe "{{ custom_registry_url }}"
+        custom_registry_username: !unsafe "{{ custom_registry_user }}"
+        custom_registry_password: !unsafe "{{ custom_registry_pwd }}"
+    credential_inputs:
+      custom_registry_url: "{{ custom_registry_url | default(server_hostname + ':3000', true) }}"
+      custom_registry_user: "{{ custom_registry_username | default(gitea_username, true) }}"
+      custom_registry_pwd: "{{ custom_registry_password | default(gitea_password, true)  }}"
   # ------------------------------------
 
 aap2_inventories:
@@ -155,7 +160,7 @@ aap2_templates:
     aap2_template_playbook: playbooks/image-mode-build-image.yml
     aap2_template_credentials:
       - RH1 Image Mode Demo - Linux Credentials
-      - RH1 Image Mode Demo - Gitea Credentials
+      - RH1 Image Mode Demo - Custom Registry Credentials
       - RH1 Image Mode Demo - Redhat Registry Credentials
     aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
     aap2_template_project: RH1 Image Mode Demo
@@ -164,7 +169,7 @@ aap2_templates:
     aap2_template_playbook: playbooks/image-mode-push-image.yml
     aap2_template_credentials:
       - RH1 Image Mode Demo - Linux Credentials
-      - RH1 Image Mode Demo - Gitea Credentials
+      - RH1 Image Mode Demo - Custom Registry Credentials
       - RH1 Image Mode Demo - Redhat Registry Credentials
     aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
     aap2_template_project: RH1 Image Mode Demo
@@ -180,7 +185,7 @@ aap2_templates:
     aap2_template_playbook: playbooks/image-mode-build-iso.yml
     aap2_template_credentials:
       - RH1 Image Mode Demo - Linux Credentials
-      - RH1 Image Mode Demo - Gitea Credentials
+      - RH1 Image Mode Demo - Custom Registry Credentials
       - RH1 Image Mode Demo - Redhat Registry Credentials
     aap2_template_inventory: RH1 Image Mode Demo - SCM Inventory
     aap2_template_project: RH1 Image Mode Demo
