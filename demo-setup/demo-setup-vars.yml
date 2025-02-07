@@ -1,5 +1,5 @@
 ### Red Hat Container Registry authentication (use Red Hat ID Username/Password or service account)
-redhat_registry_url: 
+redhat_registry_url: registry.redhat.io
 redhat_registry_username: 
 redhat_registry_password: 
 
@@ -29,7 +29,7 @@ server_password: redhat
 gitea_username: gitea
 gitea_password: redhat
 
-### Custom registry if not using Gitea integrated registry - Leave empty to use Gitea credentials
+### Custom registry if not using Gitea integrated registry - Leave blank if using Gitea
 custom_registry_url: 
 custom_registry_username: 
 custom_registry_password: 
@@ -194,6 +194,7 @@ aap2_templates:
 aap2_workflows:
   - aap2_workflow_name: "[RH1][Image Mode Demo] Build Image Mode application image"
     aap2_workflow_project: RH1 Image Mode Demo
+    aap2_workflow_ask_extra_vars: true
     aap2_workflow_extra_vars:
       image_tag: app
       build_folder: app-repo
@@ -215,6 +216,7 @@ aap2_workflows:
 
   - aap2_workflow_name: "[RH1][Image Mode Demo] Build Image Mode SOE Image"
     aap2_workflow_project: RH1 Image Mode Demo
+    aap2_workflow_ask_extra_vars: true
     aap2_workflow_extra_vars:
       image_tag: soe
       build_folder: soe-repo
@@ -236,6 +238,7 @@ aap2_workflows:
 
   - aap2_workflow_name: "[RH1][Image Mode Demo] Build Image Mode application ISO"
     aap2_workflow_project: RH1 Image Mode Demo
+    aap2_workflow_ask_extra_vars: true
     aap2_workflow_extra_vars:
       image_tag: app
       build_folder: app-repo
