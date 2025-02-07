@@ -18,13 +18,19 @@
   vars_files:
     - demo-setup-vars.yml
   pre_tasks:
-    - name: RH1 Demo | Esure Podman is installed
+    - name: RH1 Demo | Ensure packages are up to date
+      become: true
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+
+    - name: RH1 Demo | Ensure Podman is installed
       become: true
       ansible.builtin.dnf:
         name: podman
         state: present
 
-    - name: Enable Linger for user
+    - name: Enable linger for user
       ansible.builtin.command:
         argv:
           - /usr/bin/loginctl
